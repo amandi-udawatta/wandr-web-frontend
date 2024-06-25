@@ -11,7 +11,7 @@ import Button from "./Button";
 const Navbar = () => {
 
     const pathname = usePathname();
-    console.log(pathname);
+    // console.log(pathname);
 
     return(
         <nav className=" flexBetween 

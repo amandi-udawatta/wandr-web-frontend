@@ -9,8 +9,8 @@ module.exports = {
     extend: {
       colors: {
         green: {
-          50: '#30AF5B',
-          90: '#292C27',
+          50: '#609734',
+          90: '#332D1E',
         },
         gray: {
           10: '#EEEEEE',
@@ -46,6 +46,11 @@ module.exports = {
       },
       borderRadius: {
         '5xl': '40px',
+      },
+      height: {
+        'btn-sm': '2rem',
+        'btn-md': '2.5rem',
+        'btn-lg': '3rem',
       },
     },
   },
