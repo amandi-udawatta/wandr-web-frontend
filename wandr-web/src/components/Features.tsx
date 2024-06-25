@@ -11,8 +11,8 @@ const Features = () => {
           <Image
           src= "/phone.png"
           alt='phone'
-          width={440}
-          height={1000}
+          width={400}
+          height={900}
           className='feature-phone'
           />
         </div>
@@ -27,7 +27,7 @@ const Features = () => {
             />
             <h2 className='bold-40 lg:bold-64'>Our Features</h2>
           </div>
-          <ul className='mt-10 grid gap-10 md:grid-cols-2 lg:mt-20 md:gap-20 '>
+          <ul className='mt-10 grid gap-10 md:grid-cols-2 lg:mt-20 md:gap-17 '>
             {FEATURES.map((feature) => (
               <FeatureItem
                 key={feature.title}

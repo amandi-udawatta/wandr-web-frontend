@@ -1,9 +1,8 @@
 // NAVIGATION
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
-    { href: '/', key: 'how_hilink_work', label: 'How Travellogram Works?' },
-    { href: '/', key: 'services', label: 'Services' },
-    { href: '/', key: 'pricing ', label: 'Pricing ' },
+    { href: '/', key: 'blog', label: 'Blog' },
+    { href: '/', key: 'register', label: 'Register' },
     { href: '/', key: 'contact_us', label: 'Contact Us' },
   ];
   
@@ -18,32 +17,32 @@ export const NAV_LINKS = [
   // FEATURES SECTION
   export const FEATURES = [
     {
-      title: 'Real maps can be offline',
+      title: 'Tailored Travel Tips',
       icon: '/map.svg',
       variant: 'green',
       description:
-        'We provide a solution for you to be able to use our application when climbing, yes offline maps you can use at any time there is no signal at the location',
+        'Discover personalized recommendations based on your preferences and past travel experiences, ensuring every journey is uniquely yours.',
     },
     {
-      title: 'Set an adventure schedule',
+      title: 'Digital Travel Diary',
       icon: '/calendar.svg',
       variant: 'green',
       description:
-        "Schedule an adventure with friends. On holidays, there are many interesting offers from Hilink. That way, there's no more discussion",
+        "Capture and chronicle your adventures with ease. Write about your experiences, upload photos, and revisit cherished memories anytime, anywhere.",
     },
     {
-      title: 'Technology using augment reality',
+      title: 'Trusted Local Services',
       icon: '/tech.svg',
       variant: 'green',
       description:
-        'Technology uses augmented reality as a guide to your hiking trail in the forest to the top of the mountain. Already supported by the latest technology without an internet connection',
+        ' Connect with vetted local service providers for accommodations, tours, activities, and more. Gain insider knowledge and support local businesses effortlessly.',
     },
     {
-      title: 'Many new locations every month',
+      title: 'Your Route, Your Way',
       icon: '/location.svg',
       variant: 'orange',
       description:
-        'Lots of new locations every month, because we have a worldwide community of climbers who share their best experiences with climbing',
+        'Plan and customize your routes with interactive maps. Tailor your journey to explore hidden gems, scenic routes, and must-see landmarks with precision.',
     },
   ];
   
@@ -52,7 +51,7 @@ export const NAV_LINKS = [
     {
       title: 'Learn More',
       links: [
-        'About Hilink',
+        'About Wandr',
         'Press Releases',
         'Environment',
         'Jobs',
@@ -62,15 +61,15 @@ export const NAV_LINKS = [
     },
     {
       title: 'Our Community',
-      links: ['Climbing xixixi', 'Hiking hilink', 'Hilink kinthill'],
+      links: ['Kitulgala Rafting', 'Best Camping Place', 'Hospitality at its best'],
     },
   ];
   
   export const FOOTER_CONTACT_INFO = {
     title: 'Contact Us',
     links: [
-      { label: 'Admin Officer', value: '123-456-7890' },
-      { label: 'Email Officer', value: 'hilink@akinthil.com' },
+      { label: 'Admin Officer', value: '076-080-3377' },
+      { label: 'Email Officer', value: 'wandr@admin.com' },
     ],
   };
   
