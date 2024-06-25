@@ -80,7 +80,7 @@ const Footer = () => {
 
         <div className='border bg-gray-20'/>
         <p className='regular-14 w-full text-center text-gray-30'>
-          2024 Travellogram | All rights reserved
+          2024 Wandr | All rights reserved
         </p>
       </div>
 

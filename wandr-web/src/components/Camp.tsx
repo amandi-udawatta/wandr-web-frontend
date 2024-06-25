@@ -71,10 +71,10 @@ const Camp = () => {
         <div className='bg-green-50 p-8 lg:max-w-[500px] xl:max-w-[735px] xl:rounded-5xl
         xl: px-16 xl:py-20 relative w-full overflow-hidden rounded-3xl'>
           <h2 className='regular-24 md:regular-32 2xl:regular-64 Capitalize text-white'>
-            <strong>Feeling Lost</strong> And Not Knowing The Way?
+            <strong>Feeling Lost</strong> And Seeking Adventure?
           </h2>
           <p className='regular-14 xl:regular-16 mt-5 text-white'>
-            Starting from the anxiety of the climbers when visiting a new climbing location, the possibility of getting lost is very large. That's why we are here for those of you who want to start an adventure
+            Join Wandr and discover breathtaking camping spots with personalized recommendations tailored to your preferences. Create your own travel journal and embark on unforgettable journeys. Your next great adventure starts here.
           </p>
           <Image
            src="/quote.svg"

@@ -15,9 +15,9 @@ export const Hero = () => {
           height = {50}
           className='absolute left-[-5px] top-[-30px] w-10 lg:w-[50px]'
         />
-        <h1 className='bold-40 lg:bold-52'>Captivating Tales from Wanderlust's Diary!</h1>
+        <h1 className='bold-40 lg:bold-52'>Unleash Your Inner WanderLust!</h1>
         <p className='regular-16 mt-6 text-gray-30 xl:max-w-[520px]'>
-          Immerse yourself in captivating narratives, breathtaking photographs, and invaluable travel tips from passionate explorers across the globe. Start exploring today and let the magic of travel unfold before your eyes!
+          Welcome to Wandr, your ultimate travel companion. Explore the Sri Lanka's most stunning camping destinations and create your own travel journal to document your unique experiences.
         </p>
 
         <div className='my-11 flex flex-wrap gap-5'>
@@ -46,7 +46,7 @@ export const Hero = () => {
           />
           <Button 
             type = "button" 
-            title = "How we work?"
+            title = "Learn how it works"
             icon= "/play.svg" 
             variant = "btn_white_text"
           />
