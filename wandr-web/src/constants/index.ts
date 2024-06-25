@@ -1,9 +1,9 @@
 // NAVIGATION
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
-    { href: '/', key: 'blog', label: 'Blog' },
-    { href: '/', key: 'register', label: 'Register' },
-    { href: '/', key: 'contact_us', label: 'Contact Us' },
+    { href: '/api/blogs', key: 'blog', label: 'Blog' },
+    { href: '/api/register', key: 'register', label: 'Register' },
+    { href: '/api/contact', key: 'contact', label: 'Contact Us' },
   ];
   
   // CAMP SECTION
@@ -68,7 +68,7 @@ export const NAV_LINKS = [
   export const FOOTER_CONTACT_INFO = {
     title: 'Contact Us',
     links: [
-      { label: 'Admin Officer', value: '076-080-3377' },
+      { label: 'Admin Officer', value: '077-123-4567' },
       { label: 'Email Officer', value: 'wandr@admin.com' },
     ],
   };
