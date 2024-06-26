@@ -18,9 +18,19 @@ body {
   .btn_white { 
     @apply  border-white bg-white px-8 py-3 text-green-50
   }
+  .btn_text { 
+    @apply  border-white bg-white text-green-50 text-start 
+  }
+  .btn_red_text  { 
+    @apply  border-white bg-white text-red-600 text-start
+  }
+  .btn_white_border { 
+    @apply  border-green-50 bg-white px-8 py-5 text-green-50
+  }
   .btn_white_text  { 
     @apply  border-white bg-white px-8 py-3 text-gray-90
   }
+  
   .btn_green  { 
     @apply  border-green-50 bg-green-50 px-8 py-5 text-white
   }
@@ -154,4 +164,10 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+@media (min-width: 768px) {
+  .custom-shadow {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
 }
