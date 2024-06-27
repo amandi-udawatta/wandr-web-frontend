@@ -23,9 +23,9 @@ interface RegisterFormInputs {
     businessLanguages: string[]; // Array of strings for checkboxes
     businessCategory: string;
     businessServices: { service: string }[];
-    // password:string;
-    // websiteURL: string;
-     // Single selection field for radio button
+    websiteURL: string;
+    password:string;
+    confirmPassword:string;
   }
   
 const RegisterPage: React.FC = () => {
@@ -34,13 +34,13 @@ const RegisterPage: React.FC = () => {
 
     const {
         register,
+        trigger,
         handleSubmit,
         formState: { errors },
         control,
+        watch,
         setValue,
-    } = useForm<RegisterFormInputs>({
-        resolver: yupResolver(registerSchema),
-    });
+    } = useForm<RegisterFormInputs>({resolver: yupResolver(registerSchema),});
 
     // UseFieldArray for handling dynamic array of inputs
     const { fields, append, remove } = useFieldArray({
@@ -52,16 +52,42 @@ const RegisterPage: React.FC = () => {
         console.log('Business Name:', data.businessName);
         console.log('Business Image:', data.businessImage);
         console.log('Business Contact:', data.businessContact);
+        console.log('Business Languages:', data.businessLanguages);
+        console.log('Business Category:', data.businessCategory);
+        console.log('Business Services:', data.businessServices);
+        console.log('Business Password:', data.password);
+        console.log('Owner NIC:', data.ownerNIC);
     };
 
     // const { trigger } = useForm<RegisterFormInputs>();
 
-    // const handleNextStep = async () => {
-    //     const isValid = await triggerValidation(); // Trigger validation before proceeding
-    //     if (isValid) {
-    //         setStep(step + 1);
-    //     }
-    // };
+    const handleStep1 = async () => {
+        const isValid = await trigger(["businessName" , "businessContact", "businessImage", "businessDescription"]); // Trigger validation before proceeding
+        if (isValid) {
+            handleNextStep();
+        }
+    };
+
+    const handleStep2 = async () => {
+        const isValid = await trigger(["ownerName" , "ownerContact", "ownerNIC"]); // Trigger validation before proceeding
+        if (isValid) {
+            handleNextStep();
+        }
+    };
+
+    const handleStep3 = async () => {
+        const isValid = await trigger(["businessLocation" , "businessAddress", "businessLanguages", "businessCategory", "websiteURL"]); // Trigger validation before proceeding
+        if (isValid) {
+            handleNextStep();
+        }
+    };
+
+    const handleStep4 = async () => {
+        const isValid = await trigger(["businessServices"]); // Trigger validation before proceeding
+        if (isValid) {
+            handleNextStep();
+        }
+    };
 
     const handleNextStep = () => {
         setStep(step + 1);
@@ -70,16 +96,6 @@ const RegisterPage: React.FC = () => {
     const handlePreviousStep = () => {
         setStep(step - 1);
     };
-
-    // const triggerValidation = async () => {
-    //     try {
-    //         const isValid = await trigger(); // Trigger validation for the entire form
-    //         return isValid;
-    //     } catch (err) {
-    //         console.error('Validation error:', err);
-    //         return false; // Validation failed
-    //     }
-    // };
 
     return (
         <div className="flex flex-col md:flex-row h-screen items-center justify-center">
@@ -165,7 +181,7 @@ const RegisterPage: React.FC = () => {
                                                 variant="btn_green"
                                                 height="h-btn-sm"
                                                 rounded="rounded-lg"
-                                                onClick={handleNextStep}
+                                                onClick= {handleStep1}
                                             />
                                         </div>
                                     </div>
@@ -185,6 +201,7 @@ const RegisterPage: React.FC = () => {
                                         placeholder="Enter Business Owner's Name"
                                         {...register('ownerName')}
                                     />
+                                    {errors.ownerName && <p className="text-red-500 text-xs">{errors.ownerName.message}</p>}
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="ownerContact">
@@ -197,6 +214,7 @@ const RegisterPage: React.FC = () => {
                                         placeholder="Enter Business Owner's Contact Number"
                                         {...register('ownerContact')}
                                     />
+                                    {errors.ownerContact && <p className="text-red-500 text-xs">{errors.ownerContact.message}</p>}
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="ownerNIC">
@@ -209,6 +227,7 @@ const RegisterPage: React.FC = () => {
                                         placeholder="Enter Business Owner's NIC Number"
                                         {...register('ownerNIC')}
                                     />
+                                    {errors.ownerNIC && <p className="text-red-500 text-xs">{errors.ownerNIC.message}</p>}
                                 </div>
                                 <div className='flex flex-row justify-start'>
                                     <div className="flex items-center justify-between mr-3">
@@ -231,7 +250,7 @@ const RegisterPage: React.FC = () => {
                                                 variant="btn_green"
                                                 height="h-btn-sm"
                                                 rounded="rounded-lg"
-                                                onClick={handleNextStep}
+                                                onClick={handleStep2}
                                             />
                                         </div>
                                     </div>
@@ -253,6 +272,7 @@ const RegisterPage: React.FC = () => {
                                         placeholder="Enter Business Location"
                                         {...register('businessLocation')}
                                     />
+                                    {errors.businessLocation && <p className="text-red-500 text-xs">{errors.businessLocation.message}</p>}
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessAddress">
@@ -264,6 +284,7 @@ const RegisterPage: React.FC = () => {
                                         placeholder="Enter Business Address"
                                         {...register('businessAddress')}
                                     />
+                                    {errors.businessAddress && <p className="text-red-500 text-xs">{errors.businessAddress.message}</p>}
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessLanguages">
@@ -299,6 +320,7 @@ const RegisterPage: React.FC = () => {
                                             <span className="ml-2 text-gray-700">Tamil</span>
                                         </label>
                                     </div>
+                                    {errors.businessLanguages && <p className="text-red-500 text-xs">{errors.businessLanguages.message}</p>}
                                 </div>
 
                                 <div className="mb-4">
@@ -325,6 +347,20 @@ const RegisterPage: React.FC = () => {
                                             <span className="ml-2 text-gray-700">Service Provider</span>
                                         </label>
                                     </div>
+                                    {errors.businessCategory && <p className="text-red-500 text-xs">{errors.businessCategory.message}</p>}
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="websiteURL">
+                                        Business Website URL:
+                                    </label>
+                                    <input
+                                        className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        id="websiteURL"
+                                        type="text"
+                                        placeholder="Enter Business website URL (Optional) "
+                                        {...register('websiteURL')}
+                                    />
+                                    {errors.websiteURL && <p className="text-red-500 text-xs">{errors.websiteURL.message}</p>}
                                 </div>
                                 <div className='flex flex-row justify-start'>
                                     <div className="flex items-center justify-between mr-3">
@@ -347,7 +383,7 @@ const RegisterPage: React.FC = () => {
                                                 variant="btn_green"
                                                 height="h-btn-sm"
                                                 rounded="rounded-lg"
-                                                onClick={handleNextStep}
+                                                onClick={handleStep3}
                                             />
                                         </div>
                                     </div>
@@ -364,14 +400,6 @@ const RegisterPage: React.FC = () => {
                                         Business Services:
                                     </label>
                                     <div className="flex flex-col space-y-4">
-                                    {/* <div className="flex items-center">
-                                        <input
-                                            type="text"
-                                            className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            placeholder="Enter Business Service 1"
-                                            {...register(`businessServices.0.service` as const)}
-                                        />
-                                    </div> */}
                                     {fields.map((item, index) => (
                                         <div key={item.id} className="flex items-center">
                                             <input
@@ -401,6 +429,9 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     ))}
                                     </div>
+                                    {errors.businessServices && (
+                                        <p className="text-red-500 text-xs">{errors.businessServices.message}</p>
+                                    )}
                                     <div className="flex flexStart mt-5 ">
                                         <div className="flexStart w-1/2">
                                             <Space className='mr-3 text-green-50 text-lg'>
@@ -435,6 +466,65 @@ const RegisterPage: React.FC = () => {
                                         <div className="flexStart w-1/2">
                                             <Button
                                                 type="submit"
+                                                title="Next"
+                                                variant="btn_green"
+                                                height="h-btn-sm"
+                                                rounded="rounded-lg"
+                                                onClick={handleStep4}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            )}
+                            {step === 5 && (
+                                <div>
+                                <h3 className="text-xl font-bold mb-4 text-green-90">Login Information</h3>
+                                <div className="mb-4">
+                                    <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="password">
+                                        Password:
+                                    </label>
+                                    <input
+                                        className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        id="password"
+                                        type="text"
+                                        placeholder="Enter Password"
+                                        {...register('password')}
+                                    />
+                                    {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-green-90 text-sm font-bold mb-2 " htmlFor='confirmPassword'>
+                                        Confirm Password:
+                                    </label>
+                                    <input
+                                        className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        type="text"
+                                        placeholder="Enter Password Again"
+                                        {...register('confirmPassword')}
+                                    />
+                                    {errors.confirmPassword && (
+                                        <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>
+                                    )}
+                                </div>
+                                <div className='flex flex-row justify-start'>
+                                    <div className="flex items-center justify-between mr-3">
+                                        <div className="flexStart w-1/2">
+                                            <Button
+                                                type="submit"
+                                                title="Previous"
+                                                variant="btn_white_border"
+                                                height="h-btn-sm"
+                                                rounded="rounded-lg"
+                                                onClick={handlePreviousStep}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flexStart w-1/2">
+                                            <Button
+                                                type="submit"
                                                 title="Register"
                                                 variant="btn_green"
                                                 height="h-btn-sm"
@@ -446,7 +536,7 @@ const RegisterPage: React.FC = () => {
                                 </div>
                                 
                             </div>
-                            )}  
+                            )}
                         </form>
                         {/* <p className="mt-20 text-gray-500 text-sm text-center">
                             Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
