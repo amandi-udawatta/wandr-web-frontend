@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Button from '../../../components/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -22,10 +23,40 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   // Handle form submission
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log('Email:', data.email);
-    console.log('Password:', data.password);
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    try {
+      const response = await fetch('http://localhost:8081/api/proxy/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          role: 'TRAVELLER',
+          email: data.email,
+          password: data.password
+        }),
+      });
+
+      console.log('Login response:', response);
+
+      if (!response.ok) {
+        throw new Error('Failed to login');
+      }
+
+      const responseData = await response.json();
+      // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
+      console.log('Login successful:', responseData.message);
+      console.log('Access Token:', responseData.data.accessToken);
+      console.log('Refresh Token:', responseData.data.refreshToken);
+
+      // Handle storing tokens or redirecting to authenticated area
+    } catch (error) {
+      setError('Failed to login. Please check your credentials.');
+      console.error('Login error:', error);
+    }
   };
 
   return (
@@ -74,14 +105,14 @@ const LoginPage: React.FC = () => {
                   {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flexCenter w-1/2">
+                  <div className="w-1/2">
                     <Button
                       type="submit"
                       title="Login"
                       variant="btn_green"
-                      full
                       height="h-btn-md"
                       rounded="rounded-lg"
+                      onClick={handleSubmit(onSubmit)}
                     />
                   </div>
                 </div>

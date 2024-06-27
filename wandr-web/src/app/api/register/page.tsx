@@ -98,7 +98,7 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col md:flex-row h-screen items-center justify-center">
+        <div className="flex flex-col md:flex-row items-center justify-center my-10 ">
             <div className="flex flex-row w-full max-w-5xl bg-white custom-shadow rounded-3xl overflow-hidden">
                 <div className="w-1/2 hidden md:flex">
                     <Image
@@ -429,12 +429,9 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     ))}
                                     </div>
-                                    {errors.businessServices && (
-                                        <p className="text-red-500 text-xs">{errors.businessServices.message}</p>
-                                    )}
                                     <div className="flex flexStart mt-5 ">
                                         <div className="flexStart w-1/2">
-                                            <Space className='mr-3 text-green-50 text-lg'>
+                                            <Space className={`mr-3 text-green-50 text-lg ${fields.length >= 8 ? 'opacity-50' : ''}`}>
                                                 <PlusCircleOutlined />
                                             </Space>
                                             <Button
@@ -445,9 +442,13 @@ const RegisterPage: React.FC = () => {
                                                 rounded="rounded-lg"
                                                 alignment = "flex justify-center items-center text-start"
                                                 onClick={() => append({ service: '' })}
+                                                disabled = {fields.length >=8}
                                             />
                                         </div>
                                     </div>
+                                    {errors.businessServices && (
+                                        <p className="text-red-500 text-xs">{errors.businessServices.message}</p>
+                                    )}
                                 </div>
                                 <div className='flex flex-row justify-start'>
                                     <div className="flex items-center justify-between mr-3">
@@ -488,7 +489,7 @@ const RegisterPage: React.FC = () => {
                                     <input
                                         className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         id="password"
-                                        type="text"
+                                        type="password"
                                         placeholder="Enter Password"
                                         {...register('password')}
                                     />
@@ -500,7 +501,7 @@ const RegisterPage: React.FC = () => {
                                     </label>
                                     <input
                                         className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        type="text"
+                                        type="password"
                                         placeholder="Enter Password Again"
                                         {...register('confirmPassword')}
                                     />
