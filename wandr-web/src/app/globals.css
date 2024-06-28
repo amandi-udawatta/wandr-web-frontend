@@ -175,3 +175,29 @@ main {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 }
+
+.ant-upload-text, .ant-upload-hint{
+  font-family: "Poppins", sans-serif !important;
+}
+
+:where(.css-dev-only-do-not-override-m4timi).ant-upload-wrapper .ant-upload-drag{
+  border: 1px solid #609734;
+}
+
+/* :where(.css-dev-only-do-not-override-m4timi).ant-upload-wrapper .ant-upload-drag :hover{
+  border: 1px solid #609734;
+} */
+
+:where(.css-dev-only-do-not-override-m4timi).ant-upload-wrapper .ant-upload-drag:not(.ant-upload-disabled):hover, :where(.css-dev-only-do-not-override-m4timi).ant-upload-wrapper .ant-upload-drag-hover:not(.ant-upload-disabled){
+  border-color: #609734 !important;
+}
+
+.anticon{
+  color: #609734 !important;
+}
+
+.ant-upload-drag{
+  background: white !important;
+}
+
+

@@ -4,8 +4,10 @@ import * as yup from 'yup';
 export const registerSchema = yup.object().shape({
   businessName: yup.string().required('Business Name is required'),
 
-  businessImage: yup.string().required('Business Image is required'),
-
+  businessImage: yup
+    .mixed()
+    .required('Business Image is required'),
+    
   businessContact: yup
     .string()
     .matches(/^(07|01)\d{8}$/, 'Contact Number should have exactly 10 digits and start with 07 or 01')
