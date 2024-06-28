@@ -3,16 +3,19 @@
 import React, { useState } from 'react';
 import { registerSchema } from '@/validations/registerSchema';
 import Image from 'next/image'
-import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
+import { useForm, SubmitHandler, useFieldArray} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@/components/Button';
 import {MinusCircleOutlined, PlusCircleOutlined} from '@ant-design/icons';
 import { Space } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { message, Upload } from 'antd';
 
 
 interface RegisterFormInputs {
     businessName: string;
-    businessImage: string;
+    businessImage: FileList | null;
     businessContact: string;
     businessDescription: string;
     ownerName: string;
@@ -38,7 +41,6 @@ const RegisterPage: React.FC = () => {
         handleSubmit,
         formState: { errors },
         control,
-        watch,
         setValue,
     } = useForm<RegisterFormInputs>({resolver: yupResolver(registerSchema),});
 
@@ -57,6 +59,38 @@ const RegisterPage: React.FC = () => {
         console.log('Business Services:', data.businessServices);
         console.log('Business Password:', data.password);
         console.log('Owner NIC:', data.ownerNIC);
+    };
+
+    const { Dragger } = Upload;
+
+    const props: UploadProps = {
+        maxCount: 1,
+        name: 'file',
+        multiple: true,
+        action: '',
+        onChange(info) {
+            const { status } = info.file;
+            if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+                // const fileList = info.fileList.map((file: any) => file.originFileObj); // convert to FileList-like object
+                setValue('businessImage', info.file.originFileObj);
+                message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+        beforeUpload: (file) => {
+            const isPNG = (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/gif' || file.type === 'image/svg' || file.type === 'image/webp' || file.type === 'image/bmp');
+            if (!isPNG) {
+                message.error(`${file.name} is not an image file`);
+            }
+            return isPNG || Upload.LIST_IGNORE;
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
     };
 
     // const { trigger } = useForm<RegisterFormInputs>();
@@ -145,7 +179,7 @@ const RegisterPage: React.FC = () => {
                                         />
                                         {errors.businessContact && <p className="text-red-500 text-xs">{errors.businessContact.message}</p>}
                                     </div>
-                                    <div className="mb-4">
+                                    {/* <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessImage">
                                             Business Image/Logo:
                                         </label>
@@ -156,6 +190,21 @@ const RegisterPage: React.FC = () => {
                                             placeholder='Attach your business image/logo'
                                             {...register('businessImage')}
                                         />
+                                        {errors.businessImage && <p className="text-red-500 text-xs">{errors.businessImage.message}</p>}
+                                    </div> */}
+                                    <div className="mb-4">
+                                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessImage">
+                                            Business Image/Logo:
+                                        </label>
+                                        <Dragger {...props}>
+                                            <p className="ant-upload-drag-icon">
+                                                <InboxOutlined />
+                                            </p>
+                                            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                            <p className="ant-upload-hint">
+                                                Please Upload only one image here.
+                                            </p>
+                                        </Dragger>
                                         {errors.businessImage && <p className="text-red-500 text-xs">{errors.businessImage.message}</p>}
                                     </div>
                                     <div className="mb-4">
@@ -185,6 +234,9 @@ const RegisterPage: React.FC = () => {
                                             />
                                         </div>
                                     </div>
+                                    <p className="mt-20 text-gray-500 text-sm flexCenter">
+                                        Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
+                                    </p>
                                 </div>
                             )}
                             {step === 2 && (
@@ -255,7 +307,9 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <p className="mt-20 text-gray-500 text-sm flexCenter">
+                                    Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
+                                </p>
                             </div>
                             )}
                             {step === 3 && (
@@ -388,10 +442,11 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <p className="mt-20 text-gray-500 text-sm flexCenter">
+                                    Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
+                                </p>
                             </div>
                             )}
-
                             {step === 4 && (
                                 <div>
                                 <h3 className="text-xl font-bold mb-4 text-green-90">Service Information</h3>
@@ -476,7 +531,9 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <p className="mt-20 text-gray-500 text-sm flexCenter">
+                                    Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
+                                </p>
                             </div>
                             )}
                             {step === 5 && (
@@ -535,7 +592,9 @@ const RegisterPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <p className="mt-20 text-gray-500 text-sm flexCenter">
+                                    Already have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/login"> &nbsp; Login</a>
+                                </p>
                             </div>
                             )}
                         </form>
