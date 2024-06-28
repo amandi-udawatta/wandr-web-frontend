@@ -3,10 +3,13 @@
 import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '../../../components/Button';
+import Button from '../../../../components/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/validations/loginSchema';
+import { notification } from 'antd';
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
 
 interface LoginFormInputs {
   email: string;
@@ -23,11 +26,21 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
+  const openNotification = (message: string) => {
+    notification.success({
+      message: 'Login Success',
+      description: message,
+      placement: 'topRight',
+    });
+  };
+
   const [error, setError] = useState<string | null>(null);
 
   // Handle form submission
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     try {
+      const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
+
       const response = await fetch('http://localhost:8081/api/proxy/login', {
         method: 'POST',
         headers: {
@@ -36,7 +49,7 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify({
           role: 'TRAVELLER',
           email: data.email,
-          password: data.password
+          password: hashedPassword,
         }),
       });
 
@@ -48,9 +61,13 @@ const LoginPage: React.FC = () => {
 
       const responseData = await response.json();
       // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
+      openNotification(responseData.message);
       console.log('Login successful:', responseData.message);
       console.log('Access Token:', responseData.data.accessToken);
       console.log('Refresh Token:', responseData.data.refreshToken);
+
+      Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
+      Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {
