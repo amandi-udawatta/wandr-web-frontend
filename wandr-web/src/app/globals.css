@@ -192,12 +192,52 @@ main {
   border-color: #609734 !important;
 }
 
-.anticon{
+.register-dragger .anticon{
   color: #609734 !important;
 }
 
 .ant-upload-drag{
   background: white !important;
+}
+
+.my-text{
+  font-family: "Poppins", sans-serif !important;
+}
+
+.white-icon{
+  color: white !important;
+}
+
+.ant-table-cell{
+  font-family: "Poppins", sans-serif !important;
+}
+
+.search-bar :where(.css-dev-only-do-not-override-m4timi).ant-input-outlined:hover , .search-bar :where(.css-dev-only-do-not-override-m4timi).ant-input-outlined:focus-within{
+  border-color: #609734 !important;
+}
+
+.search-bar :where(.css-dev-only-do-not-override-m4timi).ant-input-outlined:focus, :where(.css-dev-only-do-not-override-m4timi).ant-input-outlined:focus-within{
+  border-color: #609734 !important;
+}
+
+/* styles.css */
+.custom-list-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem; /* equivalent to p-4 */
+  gap: 0.5rem; /* equivalent to space-x-2 */
+  font-weight: 600; /* equivalent to font-semibold */
+  transition: background-color 0.3s ease, color 0.3s ease; /* add transition for smooth hover effect */
+  cursor: pointer;
+  height: 3rem; /* equivalent to h-12 */
+}
+
+.custom-list-item:hover {
+  background-color: #609734; /* equivalent to hover:bg-green-50 */
+  color: white; /* equivalent to hover:text-white */
+  border: 1px solid currentColor; /* equivalent to hover:border */
+  border-radius: 0.75rem; /* equivalent to hover:rounded-xl */
+  height: 3rem; /* equivalent to h-12 */
 }
 
 

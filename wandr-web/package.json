@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.1.1",
     "@ant-design/icons": "^5.3.7",
     "@hookform/resolvers": "^3.6.0",
     "@shadcn/ui": "^0.0.4",
@@ -25,6 +26,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.0",
+    "react-icons": "^5.2.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "yup": "^1.4.0"
