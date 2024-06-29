@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/components/Button';
+import Navbar from '@/components/Navbar';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/validations/loginSchema';
@@ -77,6 +78,8 @@ const AdminLoginPage: React.FC = () => {
   };
 
   return (
+    <div>
+      <Navbar />
       <div className="flex flex-col md:flex-row h-screen items-center justify-center mb-10 mt-[-60px]">
         <div className="flex flex-row w-full max-w-4xl bg-white custom-shadow rounded-3xl overflow-hidden">
           <div className="w-1/2 h-auto hidden md:flex">
@@ -141,6 +144,7 @@ const AdminLoginPage: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
