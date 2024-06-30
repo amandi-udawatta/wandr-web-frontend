@@ -20,10 +20,10 @@ export const NAV_LINKS = [
   export const SIDEBAR_ITEMS = [
 
     { href: '/api/admin/dashboard', key: 'dashboard', label: 'Dashboard', icon: PieChartOutlined  },
-    { href: '/api/admin/placesManagement', key: 'placesManagement', label: 'Places Management', icon: EnvironmentOutlined },
+    { href: '/api/admin/places', key: 'places', label: 'Places Management', icon: EnvironmentOutlined },
     { href: '/api/admin/businesses', key: 'businesses', label: 'Businesses', icon: ShopOutlined },
     { href: '/api/admin/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
-    { href: '/api/admin/businessPlans', key: 'businessPlans', label: 'Buiness Plans', icon: SafetyCertificateOutlined },
+    { href: '/api/admin/plans', key: 'plans', label: 'Buiness Plans', icon: SafetyCertificateOutlined },
     { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
     { href: '/api/admin/signout', key: 'signout', label: 'Sign Out', icon: LogoutOutlined },
 

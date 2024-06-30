@@ -1,22 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
 import AdminHeader from '@/components/admin/AdminHeader'
-import AdminDashboardContent from '@/components/admin/AdminDashboardContent'
 import AdminSidebar from '@/components/admin/AdminSideBar';
 
-const AdminDashboard: React.FC = () => {
+const AdminBusinesses: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <AdminSidebar active={'Dashboard'}/>
+      <AdminSidebar active={'Businesses'}/>
       <div className="flex-1 flex flex-col">
-        <AdminHeader page={'Dashboard'} />
+          <AdminHeader page={'Businesses'} />
         <div className="flex-1 overflow-y-auto">
-          <AdminDashboardContent />
+          <h1>Businesses</h1>
         </div>
       </div>
     </div>
   )
 }
 
-export default AdminDashboard;
+export default AdminBusinesses;
