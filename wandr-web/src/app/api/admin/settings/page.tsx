@@ -6,12 +6,12 @@ import AdminSidebar from '@/components/admin/AdminSideBar';
 const AdminPlaces: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <AdminSidebar active={'Places Management'}/>
+      <AdminSidebar active={'Settings'}/>
       <div className="flex-1 flex flex-col">
-        <AdminHeader page={'Places Management'} />
+        <AdminHeader page={'Settings'} />
         
         <div className="flex-1 overflow-y-auto">
-          <h1>Places Management</h1>
+          <h1>Settings</h1>
         </div>
       </div>
     </div>
