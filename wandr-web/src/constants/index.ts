@@ -1,9 +1,32 @@
 // NAVIGATION
+import {
+  PieChartOutlined ,
+  EnvironmentOutlined,
+  FundOutlined ,
+  ShopOutlined,
+  SafetyCertificateOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
+
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
     { href: '/api/blogs', key: 'blog', label: 'Blog' },
     { href: '/api/register', key: 'register', label: 'Register' },
     { href: '/api/contact', key: 'contact', label: 'Contact Us' },
+  ];
+
+
+  export const SIDEBAR_ITEMS = [
+
+    { href: '/api/admin/dashboard', key: 'dashboard', label: 'Dashboard', icon: PieChartOutlined  },
+    { href: '/api/admin/places', key: 'places', label: 'Places Management', icon: EnvironmentOutlined },
+    { href: '/api/admin/businesses', key: 'businesses', label: 'Businesses', icon: ShopOutlined },
+    { href: '/api/admin/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
+    { href: '/api/admin/plans', key: 'plans', label: 'Buiness Plans', icon: SafetyCertificateOutlined },
+    { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
+    { href: '/api/admin/signout', key: 'signout', label: 'Sign Out', icon: LogoutOutlined },
+
   ];
   
   // CAMP SECTION

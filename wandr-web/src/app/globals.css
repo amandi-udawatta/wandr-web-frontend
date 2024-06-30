@@ -229,11 +229,13 @@ main {
   font-weight: 600; /* equivalent to font-semibold */
   transition: background-color 0.3s ease, color 0.3s ease; /* add transition for smooth hover effect */
   cursor: pointer;
-  height: 3rem; /* equivalent to h-12 */
+  height: 3rem;
+  width: auto /* equivalent to h-12 */;
+  border-radius: 0.75rem;
 }
 
 .custom-list-item:hover {
-  background-color: #609734; /* equivalent to hover:bg-green-50 */
+  background-color: #94d063; /* equivalent to hover:bg-green-50 */
   color: white; /* equivalent to hover:text-white */
   border: 1px solid currentColor; /* equivalent to hover:border */
   border-radius: 0.75rem; /* equivalent to hover:rounded-xl */

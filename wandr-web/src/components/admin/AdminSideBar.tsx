@@ -1,35 +1,32 @@
-'use client';
+import React from 'react';
+import Image from "next/image";
+import Link from 'next/link';
+import { SIDEBAR_ITEMS } from '@/constants';
 
-import React, { useState } from 'react';
-import Sidebar from '@/components/SideBar';
-import {
-  PieChartFilled,
-  EnvironmentFilled,
-  FundFilled,
-  ShopFilled,
-  SafetyCertificateFilled,
-  SettingFilled,
-  CloseCircleFilled,
-} from '@ant-design/icons';
 
-const App: React.FC = () => {
-  const [activeItem, setActiveItem] = useState<string>('Dashboard');
+interface AdminSidebarProps{
+  active: string;
+}
 
-  const sidebarItems = [
-    { title: 'Dashboard', icon: PieChartFilled, path: '/dashboard', isActive: activeItem === 'Dashboard' },
-    { title: 'Places Management', icon: EnvironmentFilled, path: '/places-management', isActive: activeItem === 'Places Management' },
-    { title: 'Businesses', icon: ShopFilled, path: '/businesses', isActive: activeItem === 'Businesses' },
-    { title: 'Advertisements', icon: FundFilled, path: '/advertisements', isActive: activeItem === 'Advertisements' },
-    { title: 'Business Plans', icon: SafetyCertificateFilled, path: '/business-plans', isActive: activeItem === 'Business Plans' },
-    { title: 'Settings', icon: SettingFilled, path: '/settings', isActive: activeItem === 'Settings' },
-    { title: 'Sign Out', icon: CloseCircleFilled, path: '/sign-out', isActive: activeItem === 'Sign Out' },
-  ];
-
+const AdminSidebar: React.FC<AdminSidebarProps> = ({active}) => {
   return (
-    <div className="flex">
-      <Sidebar logoSrc="/logo.png" items={sidebarItems} />
-    </div>
-  );
-};
+    <aside className="h-full bg-white shadow-md">
+      <div className='flex justify-center align-middle mt-5 mb-10'>
+        <Image src='/logo.png' alt="logo" width={150} height={19} />
+      </div>
+      <nav className='text-green-50 px-2'>
+        <ul className="space-y-4">
+          {SIDEBAR_ITEMS.map((link) => (
+              <Link href={link.href} key={link.key}
+              className={` custom-list-item  ${active === link.label? 'bg-green-50 text-white border rounded-xl' : ''}`}>
+                  <link.icon />
+                  {link.label}
+              </Link>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  )
+}
 
-export default App;
+export default AdminSidebar;
