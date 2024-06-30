@@ -8,7 +8,7 @@ import AdminSidebar from '@/components/admin/AdminSideBar';
 const AdminDashboard: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <AdminSidebar/>
+      <AdminSidebar active={'Dashboard'}/>
       <div className="flex-1 flex flex-col">
         <AdminHeader />
         <div className="flex-1 overflow-y-auto">
