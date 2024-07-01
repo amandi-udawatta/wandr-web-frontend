@@ -5,8 +5,7 @@ export const registerSchema = yup.object().shape({
   businessName: yup.string().required('Business Name is required'),
 
   businessImage: yup
-    .mixed()
-    .required('Business Image is required'),
+    .mixed(),
     
   businessContact: yup
     .string()
@@ -16,6 +15,8 @@ export const registerSchema = yup.object().shape({
   businessDescription: yup.string().required('Business Description is required'),
 
   ownerName: yup.string().required('Owner Name is required'),
+
+  ownerEmail:yup.string().email('Invalid email').required('Email is required'),
 
   ownerContact: yup
     .string()
@@ -50,7 +51,6 @@ export const registerSchema = yup.object().shape({
 
   websiteURL: yup
     .string()
-    .url('Must be a valid URL')
     .nullable(), // Optional field, can be null or an empty string
 
   password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
