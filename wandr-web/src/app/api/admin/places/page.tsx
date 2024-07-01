@@ -2,6 +2,7 @@
 
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
+import PlacesTable from '@/components/admin/PlacesTable';
 
 const AdminPlaces: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const AdminPlaces: React.FC = () => {
         <AdminHeader page={'Places Management'} />
         
         <div className="flex-1 overflow-y-auto">
-          <h1>Places Management</h1>
+          <PlacesTable />
         </div>
       </div>
     </div>
