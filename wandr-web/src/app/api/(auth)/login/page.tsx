@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
 
   const openNotification = (message: string) => {
     notification.success({
-      message: 'Login Success',
+      message: 'Login Status',
       description: message,
       placement: 'topRight',
     });
@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          role: 'TRAVELLER',
+          role: 'BUSINESS',
           email: data.email,
           password: hashedPassword,
         }),

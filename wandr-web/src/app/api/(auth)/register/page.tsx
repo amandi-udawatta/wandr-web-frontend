@@ -12,6 +12,9 @@ import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import Navbar from '@/components/Navbar';
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
+import { notification } from 'antd';
 
 
 interface RegisterFormInputs {
@@ -21,6 +24,7 @@ interface RegisterFormInputs {
     businessDescription: string;
     ownerName: string;
     ownerContact: string;
+    ownerEmail: string;
     ownerNIC: string;
     businessLocation: string;
     businessAddress: string; // Array of strings for dynamic textboxes
@@ -32,6 +36,14 @@ interface RegisterFormInputs {
     confirmPassword:string;
   }
   
+  const openNotification = (message: string) => {
+    notification.success({
+      message: 'Registration Status',
+      description: message,
+      placement: 'topRight',
+    });
+  };
+
 const RegisterPage: React.FC = () => {
 
     const [step, setStep] = useState(1);
@@ -51,18 +63,73 @@ const RegisterPage: React.FC = () => {
         name: 'businessServices',
     });
 
-    const onSubmit: SubmitHandler<RegisterFormInputs> = (data) => {
-        console.log('Business Name:', data.businessName);
-        console.log('Business Image:', data.businessImage);
-        console.log('Business Contact:', data.businessContact);
-        console.log('Business Languages:', data.businessLanguages);
-        console.log('Business Category:', data.businessCategory);
-        console.log('Business Services:', data.businessServices);
-        console.log('Business Password:', data.password);
-        console.log('Owner NIC:', data.ownerNIC);
+    const [error, setError] = useState<string | null>(null);
+
+    const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
+
+        console.log(data);
+        const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
+
+        const serviceStrings = data.businessServices.map(serviceObj => serviceObj.service);
+        const languageStings = data.businessLanguages.map(languageObj => languageObj);
+        console.log(serviceStrings);
+
+        const formData = new FormData();
+        formData.append('name', data.businessName);
+        formData.append('email', data.ownerEmail);
+        formData.append('businessContact', data.businessContact);
+        formData.append('description', data.businessDescription);
+        if (file) {
+            formData.append('shopImage', file);
+        }
+        formData.append('ownerName', data.ownerName);
+        formData.append('ownerContact', data.ownerContact);
+        formData.append('ownerNic', data.ownerNIC);
+        formData.append('address', data.businessAddress);
+        formData.append('languages', languageStings);
+        if(data.businessCategory === 'Shop'){
+            formData.append('categoryId', '1');
+        }
+        else{
+            formData.append('categoryId', '2');
+        }
+        formData.append('services', serviceStrings);
+        formData.append('websiteUrl', data.websiteURL);
+        formData.append('password', hashedPassword); 
+
+        try {
+            
+            const response = await fetch('http://localhost:8081/api/proxy/signup-business', {
+                method: 'POST',
+                body: formData
+            });
+      
+            console.log('Registration response:', response);
+      
+            if (!response.ok) {
+              throw new Error('Failed to Register');
+            }
+      
+            const responseData = await response.json();
+            // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
+            openNotification(responseData.message);
+            console.log('Login successful:', responseData.message);
+            console.log('Access Token:', responseData.data.accessToken);
+            console.log('Refresh Token:', responseData.data.refreshToken);
+      
+            Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
+            Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
+      
+            // Handle storing tokens or redirecting to authenticated area
+          } catch (error) {
+            setError('Failed to Register. Please check your credentials.');
+            console.error('Registration error:', error);
+          }
     };
 
     const { Dragger } = Upload;
+
+    const [file, setFile] = useState<File | null>(null);
 
     const props: UploadProps = {
         maxCount: 1,
@@ -87,7 +154,8 @@ const RegisterPage: React.FC = () => {
             if (!isPNG) {
                 message.error(`${file.name} is not an image file`);
             }
-            return isPNG || Upload.LIST_IGNORE;
+            setFile(file);
+            return false;
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
@@ -270,6 +338,19 @@ const RegisterPage: React.FC = () => {
                                             {...register('ownerContact')}
                                         />
                                         {errors.ownerContact && <p className="text-red-500 text-xs">{errors.ownerContact.message}</p>}
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="ownerEmail">
+                                            Email Address:
+                                        </label>
+                                        <input
+                                            className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="ownerEmail"
+                                            type="text"
+                                            placeholder="Enter Business's Email Address"
+                                            {...register('ownerEmail')}
+                                        />
+                                        {errors.ownerEmail && <p className="text-red-500 text-xs">{errors.ownerEmail.message}</p>}
                                     </div>
                                     <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="ownerNIC">
