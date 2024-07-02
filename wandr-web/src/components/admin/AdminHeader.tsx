@@ -14,7 +14,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({page}) => {
         <div className="text-xl font-semibold">Welcome Back!</div>
         <Input placeholder="Search here..." prefix={<SearchOutlined style={{color:'#609734'}}/>} className="w-64 search-bar" />
         <BellOutlined style={{ fontSize: '24px', color:'#EB5757'}} />
-        <Avatar icon={<UserOutlined />} style={{backgroundColor:'#609734'}} />
+        <Avatar style={{backgroundColor:'#609734'}} src={'/person-1.png'}/>
       </div>
     </div>
   )
