@@ -2,11 +2,78 @@
 
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 import TableCard from '@/components/admin/TableCard';
 import Chip from '@/components/Chip';
 import {Row, Col} from 'antd'; // Assuming this is where your BlogPost component is located
-import {Progress, Tag, Avatar} from 'antd';
+import { Avatar, Tooltip, Space, Button, message} from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+  
+  const tableData = [
+    { 
+      key: '1', 
+      number: '1', 
+      name: 'Sigiriya', 
+      imageUrl: '/sigiriya.png', 
+      category: 'Rocks', 
+      chipImage: '/categoryRock.png', 
+      location: '7.956944,  80.759720', 
+      address: 'Matale, Sri Lanka',
+      description: 'Sigiriya is a fifth century fortress in Sri Lanka which has been carved out of an inselberg, a hill of hard volcanic rock. It towers around 600 feet (182.8m) from the forest and gardens below, and has a flat top. This is where the palace of King Kasyapa once stood, reachable up a winding stone staircase.',
+      activities: [
+        { imageUrl: '/activityHillClimbing.png', text: 'Hiking' },
+        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
+        { imageUrl: '/activityCulture.png', text: 'Cultural Exploration' },
+      ],
+    },
+    { key: '2', 
+      number: '2', 
+      name: 'Nilaweli Beach', 
+      imageUrl: '/nilaweli.png', 
+      category: 'Ocean', 
+      chipImage: '/categoryOcean.png', 
+      location: '7.956944,  80.759720', 
+      address: 'Trincomalee, Sri Lanka',
+      description: 'Nilaveli beach is a quiet and relaxed beach, great for travellers looking for some rest and relaxation, some diving and snorkelling if of interest, from here one can also do a day trip to the elephant corridors around sigiriya and see some amazing herds of wild elephants.',
+      activities: [
+        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
+      ],
+    },
+    { key: '3', 
+      number: '3', 
+      name: 'Sigiriya', 
+      imageUrl: '/sigiriya.png', 
+      category: 'Rocks', 
+      chipImage: '/categoryRock.png', 
+      location: '7.956944,  80.759720', 
+      address: 'Matale, Sri Lanka',
+      description: 'Sigiriya is a fifth century fortress in Sri Lanka which has been carved out of an inselberg, a hill of hard volcanic rock. It towers around 600 feet (182.8m) from the forest and gardens below, and has a flat top. This is where the palace of King Kasyapa once stood, reachable up a winding stone staircase.',
+    },
+  ]
+
+const PlacesTable = () => {
+  const [data, setData] = useState(tableData);
+
+  const handleDelete = async (key: string) => {
+    try {
+      const response = await fetch(`/api/delete/${key}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        // Remove the row from the table data
+        setData(prevData => prevData.filter(item => item.key !== key));
+        console.log('Delete successful');
+      } else {
+        console.error('Delete failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const tableColumns = [
     { title: '#', dataIndex: 'number', key: 'number' },
@@ -15,16 +82,29 @@ import {Progress, Tag, Avatar} from 'antd';
         dataIndex: 'name',
         key: 'name',
         render: (text: string, record: any) => (
-            <div className="flex items-center space-x-2">
-            <Avatar src={record.imageUrl} />
-            <span>{text}</span>
+            <div className="flex items-center space-x-2 flex-row">
+              <Avatar src={record.imageUrl} />
+              <span>{text}</span>
             </div>
         ),
+        width: '200px',
     },
     { title: 'Location', dataIndex: 'location', key: 'location' },
     { title: 'Address', dataIndex: 'address', key: 'address' },
     {
-      title: 'Catrgory',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+      render: (text: string) => (
+        <Tooltip title={text}>
+          <span>
+            {text.length > 50 ? `${text.slice(0, 50)}... ` : text}
+          </span>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Category',
       dataIndex: 'category',
       key: 'category',
       render: (text: string, record: any) => (
@@ -35,18 +115,51 @@ import {Progress, Tag, Avatar} from 'antd';
         />
       ),
     },
-  ]
-  
-  const tableData = [
-    { key: '1', number: '1', name: 'Sigiriya', imageUrl: '/loginPage.png', category: 'Rocks', chipImage: '/categoryRock.png', location: '7.956944,  80.759720', address: 'Matale,Sri Lanka'},
-    { key: '2', number: '2', name: 'Sigiriya', imageUrl: '/loginPage.png', category: 'Rocks', chipImage: '/categoryRock.png', location: '7.956944,  80.759720', address: 'Matale,Sri Lanka'},
-    { key: '3', number: '3', name: 'Sigiriya', imageUrl: '/loginPage.png', category: 'Rocks', chipImage: '/categoryRock.png', location: '7.956944,  80.759720', address: 'Matale,Sri Lanka'},
+    {
+      title: 'Activities',
+      dataIndex: 'activities',
+      key: 'activities',
+      render: (chips: { imageUrl: string; text: string }[]) => (
+        <div className="flex gap-2 flex-col">
+          {chips && chips.length > 0 ? (
+            chips.map((chip, index) => (
+              <Chip
+                key={index}
+                imageUrl={chip.imageUrl}
+                text={chip.text}
+                size="small"
+              />
+            ))
+          ) : (
+            <span className='text-gray-500 italic'>No activities available</span>
+          )}
+        </div>
+      ),
+      width: '150px'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text: string ,record: any) => (
+        <Space size="middle">
+          <Button
+            icon={<DeleteOutlined className='text-red-600' />}
+            onClick={() => handleDelete(record.key)}
+            type="text"
+          />
+        </Space>
+      ),
+    },
+
   ]
 
-const PlacesTable = () => {
   return (
     <div className="p-4 gap-4 m-3">
-        <TableCard columns={tableColumns} data={tableData} title="Places" />
+        <TableCard 
+          columns={tableColumns} 
+          data={tableData} 
+          title="Places"
+        />
     </div>
   );
 };
