@@ -5,9 +5,10 @@
 import React, {useState} from 'react';
 import TableCard from '@/components/admin/TableCard';
 import Chip from '@/components/Chip';
-import {Row, Col} from 'antd'; // Assuming this is where your BlogPost component is located
-import { Avatar, Tooltip, Space, Button, message} from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import {Row, Col, Input} from 'antd'; // Assuming this is where your BlogPost component is located
+import { Avatar, Tooltip, Space,Button, message} from 'antd';
+// import Button from '@/components/Button';
+import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
   
   const tableData = [
     { 
@@ -48,6 +49,9 @@ import { DeleteOutlined } from '@ant-design/icons';
       location: '7.956944,  80.759720', 
       address: 'Matale, Sri Lanka',
       description: 'Sigiriya is a fifth century fortress in Sri Lanka which has been carved out of an inselberg, a hill of hard volcanic rock. It towers around 600 feet (182.8m) from the forest and gardens below, and has a flat top. This is where the palace of King Kasyapa once stood, reachable up a winding stone staircase.',
+      activities: [
+        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
+      ],
     },
   ]
 
@@ -88,9 +92,18 @@ const PlacesTable = () => {
             </div>
         ),
         width: '200px',
+        filterSearch: true,
+        sorter: (a: any, b: any) => a.name.length - b.name.length,
+        sortDirections: ['descend'],
     },
     { title: 'Location', dataIndex: 'location', key: 'location' },
-    { title: 'Address', dataIndex: 'address', key: 'address' },
+    { title: 'Address', 
+      dataIndex: 'address', 
+      key: 'address',
+      sorter: (a: any, b: any) => a.name.length - b.name.length,
+      sortDirections: ['descend'],
+    
+    },
     {
       title: 'Description',
       dataIndex: 'description',
@@ -153,11 +166,62 @@ const PlacesTable = () => {
 
   ]
 
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = (e: any) => {
+    setSearchText(e.target.value);
+    // filterData(tableData, e.target.value);
+  };
+
+  // const filterData = (data: any[], searchText: string) => {
+  //   return data.filter((item) =>
+  //     item.name.toLowerCase().includes(searchText.toLowerCase())
+  //   );
+  // };
+
+  const filteredData = data.filter((item) => {
+    const searchTextLower = searchText.toLowerCase();
+  
+    // Check if any of the fields contain the search text
+    return (
+      item.name.toLowerCase().includes(searchTextLower) ||
+      item.address.toLowerCase().includes(searchTextLower) ||
+      item.category.toLowerCase().includes(searchTextLower) ||
+      item.description.toLowerCase().includes(searchTextLower) ||
+      item.activities.some((activity) =>
+        activity.text.toLowerCase().includes(searchTextLower)
+      )
+    );
+  });
+
   return (
     <div className="p-4 gap-4 m-3">
+       <Row align={'middle'} gutter={8}>
+        <Col span={16}>
+          <Input
+            placeholder="Search by name, address, category, description, or activity..."
+            value={searchText}
+            onChange={handleSearch}
+            style={{ marginBottom: 16, width:'500px', height:'40px' }}
+            prefix={<SearchOutlined style={{color:'#609734'}}/>}
+          />
+        </Col>
+        <Col span={8}>
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              style={{ float: 'right', backgroundColor: '#609734', borderColor: '#609734' }}
+            >
+              Add New Place
+            </Button>
+          </div>
+        </Col>
+
+       </Row>
         <TableCard 
           columns={tableColumns} 
-          data={tableData} 
+          data={(filteredData.length == 0 && searchText === '') ? tableData : filteredData}
           title="Places"
         />
     </div>
