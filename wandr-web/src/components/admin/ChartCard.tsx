@@ -30,7 +30,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title }) => {
       <h1 className="text-xl font-bold h-full mb-3 mt-3 my-text">{title}</h1>
       <div className='h-52'>
 
-      </div>
+      </div>  
       {/* <Line {...config} /> */}
     </div>
   )
