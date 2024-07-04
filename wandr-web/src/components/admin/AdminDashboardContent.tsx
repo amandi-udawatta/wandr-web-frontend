@@ -3,17 +3,19 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import {Tag, Progress} from 'antd';
-import {ArrowDownOutlined,ShopOutlined,ProductOutlined,CrownOutlined} from '@ant-design/icons';
+import {ArrowDownOutlined,ShopOutlined,ProductOutlined,CrownOutlined,CarOutlined } from '@ant-design/icons';
 import StatisticCard from '@/components/admin/StatisticBar';
 import TableCard from '@/components/admin/TableCard';
+import BarChart from '@/components/charts/revenueBarChart';
 import ChartCard from '@/components/admin/ChartCard';
 import PieChart from '@/components/charts/countryPieChart';
 
 const statistics = [
+  { title: 'Total Businesses', value: 22, color: 'bg-green-100', icon: <ShopOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3CD856' },
+  { title: 'Products Reserved', value: 198, color: 'bg-yellow-100', icon: <ProductOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FF947A' },
   { title: 'Total Downloads', value: 15, color: 'bg-pink-100', icon: <ArrowDownOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FA5A7D' },
-  { title: 'Total Businesses', value: 22, color: 'bg-yellow-100', icon: <ShopOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FF947A' },
-  { title: 'Products Reserved', value: 198, color: 'bg-green-100', icon: <ProductOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3CD856' },
-  { title: 'Premium Accounts', value: 8, color: 'bg-purple-100', icon: <CrownOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#BF83FF' },
+  { title: 'Premium Accounts', value: 8, color: 'bg-blue-100', icon: <CrownOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3c70d8' },
+  { title: 'Total Trips Planned', value: 42, color: 'bg-purple-100', icon: <CarOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#BF83FF' },
 ];
 
 const tableColumns = [
@@ -50,10 +52,16 @@ const Dashboard = () => {
     title: 'User Mapping by Country',
   };
 
+  const revenueData = {
+    labels: ['Premium Accounts', 'Advertisements', 'Reservation Commissions'],
+    values: [50000, 25000, 35000],
+    title: 'Total Revenue'
+  };
+
   return (
     <div className="p-4 gap-4 m-3">
       <Row gutter={16}>
-        <Col span={16}>
+        <Col span={24}>
           <div className='gap-4 border border-gray-200 rounded-xl p-5'>
             <Row justify="center" align="top">
               <Col span={21}>
@@ -79,11 +87,6 @@ const Dashboard = () => {
             </Row>
           </div>
         </Col>
-        <Col span={8}>
-          <div className="">
-            <ChartCard title='Visitor Insights' />
-          </div>
-        </Col>
       </Row>
       <Row className='mt-5' justify='space-between' gutter={16}>
         <Col span={10}>
@@ -91,31 +94,16 @@ const Dashboard = () => {
             <TableCard columns={tableColumns} data={tableData} title="Top Businesses" />
           </div>
         </Col>
-        <Col span={7}>
+        <Col span={14}>
           <div className="">
-            <PieChart data={userData} />
-          </div>
-        </Col>
-        <Col span={7}>
-          <div className="">
-            <ChartCard title='Total Revenue' />
+            <BarChart data={revenueData} />
           </div>
         </Col>
       </Row>
       <Row className='mt-5' justify='space-between' gutter={16}>
-        <Col span={10}>
+        <Col span={9}>
           <div className="">
-            <ChartCard title='User Mapping by Country' />
-          </div>
-        </Col>
-        <Col span={7}>
-          <div className="">
-            <ChartCard title='User Mapping by Country' />
-          </div>
-        </Col>
-        <Col span={7}>
-          <div className="">
-            <ChartCard title='Total Revenue' />
+            <PieChart data={userData} />
           </div>
         </Col>
       </Row>
