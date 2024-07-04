@@ -45,6 +45,7 @@ const PieChart = ({ data }: { data: PieChartData }) => {
   };
 
   const options = {
+
     plugins: {
       legend: {
         display: false, // Disable the legend
@@ -74,7 +75,7 @@ const PieChart = ({ data }: { data: PieChartData }) => {
     <div className="border border-gray-200 rounded-xl p-5">
         <h1 className="text-xl font-bold h-full mb-3 mt-3 my-text">{data.title}</h1>  
         <div className='flex justify-center align-middle p-5'>
-            <Pie data={chartData} options={options} width={400} height={400}/>
+            <Pie data={chartData} options={options} width={250} height={250}/>
         </div>   
         
     </div>
