@@ -3,8 +3,8 @@
 import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '@/components/Button';
-import Navbar from '@/components/Navbar';
+import Button from '@/components/general/Button';
+import Navbar from '@/components/general/Navbar';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/validations/loginSchema';
@@ -48,7 +48,7 @@ const AdminLoginPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          role: 'TRAVELLER',
+          role: 'ADMIN',
           email: data.email,
           password: hashedPassword,
         }),

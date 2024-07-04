@@ -5,13 +5,13 @@ import { registerSchema } from '@/validations/registerSchema';
 import Image from 'next/image'
 import { useForm, SubmitHandler, useFieldArray} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Button from '@/components/Button';
+import Button from '@/components/general/Button';
 import {MinusCircleOutlined, PlusCircleOutlined} from '@ant-design/icons';
 import { Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/general/Navbar';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { notification } from 'antd';

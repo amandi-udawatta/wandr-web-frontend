@@ -3,14 +3,14 @@
 import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '../../../../components/Button';
+import Button from '../../../../components/general/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/validations/loginSchema';
 import { notification } from 'antd';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/general/Navbar';
 
 interface LoginFormInputs {
   email: string;
@@ -29,6 +29,14 @@ const LoginPage: React.FC = () => {
 
   const openNotification = (message: string) => {
     notification.success({
+      message: 'Login Status',
+      description: message,
+      placement: 'topRight',
+    });
+  };
+
+  const openNotificationFailed = (message: string) => {
+    notification.error({
       message: 'Login Status',
       description: message,
       placement: 'topRight',
@@ -56,11 +64,13 @@ const LoginPage: React.FC = () => {
 
       console.log('Login response:', response);
 
+      const responseData = await response.json();
+
       if (!response.ok) {
+        openNotificationFailed(responseData.message);
         throw new Error('Failed to login');
       }
 
-      const responseData = await response.json();
       // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
       openNotification(responseData.message);
       console.log('Login successful:', responseData.message);

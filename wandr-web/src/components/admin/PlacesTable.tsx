@@ -4,7 +4,7 @@
 
 import React, {useState} from 'react';
 import TableCard from '@/components/admin/TableCard';
-import Chip from '@/components/Chip';
+import Chip from '@/components/general/Chip';
 import {Row, Col, Input} from 'antd'; // Assuming this is where your BlogPost component is located
 import { Avatar, Tooltip, Space,Button, message} from 'antd';
 // import Button from '@/components/Button';
