@@ -17,7 +17,7 @@ const TableCard: React.FC<TableCardProps> = ({ columns, data, title }) => {
         columns={columns} 
         dataSource={data} 
         pagination={{
-          pageSize: 10,
+          pageSize: 5,
         }}
         scroll={{ x: 100 }}
         className='my-text' 
