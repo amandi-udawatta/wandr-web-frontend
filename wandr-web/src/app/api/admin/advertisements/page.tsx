@@ -2,6 +2,8 @@
 
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
+import AdvertisementTable from '@/components/admin/AdvertisementsTable';
+
 
 const AdminAdvertisements: React.FC = () => {
   return (
@@ -10,7 +12,7 @@ const AdminAdvertisements: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <AdminHeader page={'Advertisements'} />
       <div className="flex-1 overflow-y-auto">
-          <h1>Advertisements</h1>
+          <AdvertisementTable/>
         </div>
       </div>
     </div>
