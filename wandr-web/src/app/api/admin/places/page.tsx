@@ -10,7 +10,6 @@ const AdminPlaces: React.FC = () => {
       <AdminSidebar active={'Places Management'}/>
       <div className="flex-1 flex flex-col">
         <AdminHeader page={'Places Management'} />
-        
         <div className="flex-1 overflow-y-auto">
           <PlacesTable />
         </div>
