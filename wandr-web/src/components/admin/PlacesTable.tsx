@@ -212,6 +212,7 @@ const PlacesTable = () => {
               type="primary"
               icon={<PlusOutlined />}
               style={{ float: 'right', backgroundColor: '#609734', borderColor: '#609734' }}
+              href='/api/admin/places/add'
             >
               Add New Place
             </Button>
