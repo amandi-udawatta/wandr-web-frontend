@@ -2,88 +2,120 @@
 
 import React, { useState } from 'react';
 import {Col, message, Row } from 'antd';
+
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 import PlaceAutocomplete from '@/components/admin/PlaceAutoComplete';
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import { placeValidationSchema } from '@/validations/placeValidationSchema';
 import Button from '@/components/general/Button';
 
+import { apiService, showNotification } from '@/services/apiService';
+
 const libraries: ('places')[] = ['places'];
 
 interface PlaceFormInputs {
+  id: string;
   name: string;
   address: string;
   description: string;
-  lat: number;
-  lng: number;
+  latitude: string;
+  longitude: string;
   image: string;
   categories: string[];
   activities: string[];
 }
 
+let place_id:any;
+
 const PlacesPage = () => {
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
 
-  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<PlaceFormInputs>({
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors }, 
+    setValue, 
+    reset 
+  } = useForm<PlaceFormInputs>({
     resolver: yupResolver(placeValidationSchema),
   });
 
   const [isFormEnabled, setIsFormEnabled] = useState(false);
 
   const handlePlaceSelect = async (place: any) => {
-    const placeId = place.place_id;
-    // Send the placeId to the backend to fetch additional data
-    fetch(`/api/places/details/${placeId}`)
-      .then(response => response.json())
-      .then(data => {
-        setSelectedPlace(data);
-        setValue('name', data.name);
-        setValue('address', data.address);
-        setValue('description', data.description);
-        setValue('lat', data.location.lat);
-        setValue('lng', data.location.lng);
-        setValue('image', data.image);
-        setValue('categories', data.categories);
-        setValue('activities', data.activities);
-        setIsFormEnabled(true);
-      })
-      .catch(error => message.error('Error fetching place details'));
+
+    const placeId = place.placeId;
+    console.log(placeId);
+
+    try{
+      const response = await apiService.post(`/places/add?placeId=${placeId}`);
+
+      showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Place Details');
+
+      console.log('Fetch response:', response);
+
+      const data = response.data;
+      console.log(data);
+
+      place_id = data.id;
+
+      setValue('name', data.name);
+      setValue('address', data.address);
+      setValue('description', data.description);
+      setValue('latitude', data.latitude);
+      setValue('longitude', data.longitude);
+      setValue('image', data.image);
+      setValue('categories', data.categories);
+      setValue('activities', data.activities);
+      setIsFormEnabled(true);
+
+    }
+    catch(error){
+      showNotification('error', 'Fetch Status', 'Failed to Get details.');
+      console.error('Fetching error:', error);
+    }
+  };
+
+  const handleCancel = async () => {
+    console.log(place_id);
+
+    try {
+      const response = await apiService.delete(`/places/delete/${place_id}`);
+
+      showNotification('success', 'Operation Status', response.message || 'Successfully Cancelled the operation');
+
+      console.log('Fetch response:', response);
+
+      setSelectedPlace(null);
+      reset();
+      setIsFormEnabled(false);
+
+    } catch (error) {
+      showNotification('error', 'Operation Status', 'Error Cancelling Place Details');
+    }
   };
 
   const onSubmit: SubmitHandler<PlaceFormInputs> = async (data) => {
     try {
-      const response = await fetch('/api/places', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...selectedPlace,
+      const response = await apiService.post(`/places/update/${data.id}`, {
           name: data.name,
           address: data.address,
           description: data.description,
-        }),
       });
 
-      if (response.ok) {
-        message.success('Place saved successfully');
-        setSelectedPlace(null);
-        reset();
-        setIsFormEnabled(false);
-      } else {
-        throw new Error('Error saving place');
-      }
-    } catch (error) {
-      message.error('Error saving place');
-    }
-  };
+      showNotification('success', 'Operation Status', response.message || 'Successfully Updated Place Details');
 
-  const handleCancel = () => {
-    setSelectedPlace(null);
-    reset();
-    setIsFormEnabled(false);
+      console.log('Fetch response:', response);
+      setSelectedPlace(null);
+      reset();
+      setIsFormEnabled(false);
+
+    } catch (error) {
+        showNotification('error', 'Operation Status', 'Error Updating Place Details');
+    }
   };
 
   return (
@@ -144,27 +176,25 @@ const PlacesPage = () => {
                         {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="lat">
+                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="latitude">
                             Latitude:
                         </label>
                         <input
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="lat"
-                            type="number"
-                            placeholder="Enter latitude"
-                            disabled
+                            id="latitude"
+                            type="text"
+                            disabled={!isFormEnabled}
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="lng">
+                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="longitude">
                             Longitude:
                         </label>
                         <input
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="lng"
-                            type="number"
-                            placeholder="Enter longitude"
-                            disabled
+                            id="longitude"
+                            type="text"
+                            disabled={!isFormEnabled}
                         />
                     </div>
                     <div className="flex items-center justify-left">
@@ -187,7 +217,7 @@ const PlacesPage = () => {
                                 variant="btn_green"
                                 height="h-btn-md"
                                 rounded="rounded-lg"
-                                onClick={handleCancel}
+                                onClick={handleSubmit(onSubmit)}
                                 disabled={!isFormEnabled}
                             >
                                 Update

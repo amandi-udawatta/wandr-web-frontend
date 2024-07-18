@@ -62,7 +62,7 @@ const AdminBusinessPlans: React.FC = () => {
     // Add more plans as needed
   ];
 
-  const [currentSet, setCurrentSet] = useState("BasinessPlans");
+  const [currentSet, setCurrentSet] = useState("BusinessPlans");
 
   const getCurrentPlans = () => {
     return currentSet === 'BusinessPlans' ? BusinessPlans : TouristPlans;
