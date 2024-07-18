@@ -11,6 +11,7 @@ import { loginSchema } from '@/validations/loginSchema';
 import { notification } from 'antd';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
+import { apiService, showNotification } from '@/services/apiService';
 
 interface LoginFormInputs {
   email: string;
@@ -56,13 +57,15 @@ const AdminLoginPage: React.FC = () => {
 
       console.log('Login response:', response);
 
+      const responseData = await response.json();
+
       if (!response.ok) {
+        showNotification('error', 'Error', responseData.message || 'An error occurred');
         throw new Error('Failed to login');
       }
 
-      const responseData = await response.json();
-      // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
-      openNotification(responseData.message);
+      showNotification('success', 'Login Status', responseData.message || 'Successfully Logged In');
+
       console.log('Login successful:', responseData.message);
       console.log('Access Token:', responseData.data.accessToken);
       console.log('Refresh Token:', responseData.data.refreshToken);
@@ -72,6 +75,7 @@ const AdminLoginPage: React.FC = () => {
 
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {
+      showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
       setError('Failed to login. Please check your credentials.');
       console.error('Login error:', error);
     }
@@ -136,9 +140,6 @@ const AdminLoginPage: React.FC = () => {
                     />
                   </div>
                 </div>
-                <p className="mt-20 text-gray-500 text-sm flexCenter">
-                  Do not have an account? <a className="font-bold text-green-50 hover:text-green-800" href="/api/register"> &nbsp; Register</a>
-                </p>
               </form>
             </div>
           </div>

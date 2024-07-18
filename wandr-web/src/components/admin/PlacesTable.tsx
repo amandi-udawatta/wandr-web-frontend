@@ -16,7 +16,10 @@ import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
       number: '1', 
       name: 'Sigiriya', 
       imageUrl: '/sigiriya.png', 
-      category: 'Rocks', 
+      categories: [
+        { imageUrl: '/categoryRock.png', text: 'Rock' },
+        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
+      ], 
       chipImage: '/categoryRock.png', 
       location: '7.956944,  80.759720', 
       address: 'Matale, Sri Lanka',
@@ -31,7 +34,9 @@ import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
       number: '2', 
       name: 'Nilaweli Beach', 
       imageUrl: '/nilaweli.png', 
-      category: 'Ocean', 
+      categories: [
+        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
+      ],
       chipImage: '/categoryOcean.png', 
       location: '7.956944,  80.759720', 
       address: 'Trincomalee, Sri Lanka',
@@ -44,7 +49,10 @@ import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
       number: '3', 
       name: 'Sigiriya', 
       imageUrl: '/sigiriya.png', 
-      category: 'Rocks', 
+      categories: [
+        { imageUrl: '/categoryRock.png', text: 'Rock' },
+        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
+      ], 
       chipImage: '/categoryRock.png', 
       location: '7.956944,  80.759720', 
       address: 'Matale, Sri Lanka',
@@ -117,15 +125,24 @@ const PlacesTable = () => {
       ),
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      render: (text: string, record: any) => (
-        <Chip
-            imageUrl={record.chipImage} // Replace with the appropriate image URL from your data
-            text={record.category} // Adjust this to pass the appropriate text from your data
-            size="default"
-        />
+      title: 'Categories',
+      dataIndex: 'categories',
+      key: 'categories',
+      render: (chips: { imageUrl: string; text: string }[]) => (
+        <div className="flex gap-2 flex-col">
+          {chips && chips.length > 0 ? (
+            chips.map((chip, index) => (
+              <Chip
+                key={index}
+                imageUrl={chip.imageUrl}
+                text={chip.text}
+                size="small"
+              />
+            ))
+          ) : (
+            <span className='text-gray-500 italic'>No categories available</span>
+          )}
+        </div>
       ),
     },
     {
@@ -186,7 +203,9 @@ const PlacesTable = () => {
     return (
       item.name.toLowerCase().includes(searchTextLower) ||
       item.address.toLowerCase().includes(searchTextLower) ||
-      item.category.toLowerCase().includes(searchTextLower) ||
+      item.categories.some((category) =>
+        category.text.toLowerCase().includes(searchTextLower)
+      )||
       item.description.toLowerCase().includes(searchTextLower) ||
       item.activities.some((activity) =>
         activity.text.toLowerCase().includes(searchTextLower)
