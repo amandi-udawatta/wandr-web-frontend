@@ -28,20 +28,14 @@ const AdminLoginPage: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const openNotification = (message: string) => {
-    notification.success({
-      message: 'Login Status',
-      description: message,
-      placement: 'topRight',
-    });
-  };
-
   const [error, setError] = useState<string | null>(null);
+  
 
   // Handle form submission
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    
     try {
-      const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
+      // const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
 
       const response = await fetch('http://localhost:8081/api/proxy/login', {
         method: 'POST',
@@ -51,7 +45,7 @@ const AdminLoginPage: React.FC = () => {
         body: JSON.stringify({
           role: 'ADMIN',
           email: data.email,
-          password: hashedPassword,
+          password: data.password,
         }),
       });
 
@@ -73,10 +67,11 @@ const AdminLoginPage: React.FC = () => {
       Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
       Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
+      window.location.href = '/api/admin/dashboard';
+
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {
-      showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
-      setError('Failed to login. Please check your credentials.');
+      showNotification('error', 'Login Status', 'Failed to login');
       console.error('Login error:', error);
     }
   };

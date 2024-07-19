@@ -100,7 +100,7 @@ const PlacesPage = () => {
 
   const onSubmit: SubmitHandler<PlaceFormInputs> = async (data) => {
     try {
-      const response = await apiService.post(`/places/update/${data.id}`, {
+      const response = await apiService.post(`/places/update/${place_id}`, {
           name: data.name,
           address: data.address,
           description: data.description,
@@ -183,7 +183,8 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="latitude"
                             type="text"
-                            disabled={!isFormEnabled}
+                            {...register('latitude')}
+                            disabled
                         />
                     </div>
                     <div className="mb-4">
@@ -194,7 +195,8 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="longitude"
                             type="text"
-                            disabled={!isFormEnabled}
+                            {...register('longitude')}
+                            disabled
                         />
                     </div>
                     <div className="flex items-center justify-left">
