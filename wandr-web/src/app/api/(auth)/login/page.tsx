@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
     try {
       const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
 
-      const response = await apiService.post('http://localhost:8081/api/proxy/login', {
+      const response = await fetch('http://localhost:8081/api/proxy/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,6 @@ const LoginPage: React.FC = () => {
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {
       showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
-      setError('Failed to login. Please check your credentials.');
       console.error('Login error:', error);
     }
   };
