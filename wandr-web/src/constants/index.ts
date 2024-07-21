@@ -28,6 +28,67 @@ export const NAV_LINKS = [
     { href: '/api/admin/signout', key: 'signout', label: 'Sign Out', icon: LogoutOutlined },
 
   ];
+
+  export const CATEGORY_IMAGES = [
+    { category: 'Mountain', image: '/categories/categoryMountain.png' },
+    { category: 'Beach', image: '/categories/categoryBeach.png' },
+    { category: 'National Park', image: '/categories/categoryNationalPark.png' },
+    { category: 'Historic Site', image: '/categories/categoryHistoricSite.png' },
+    { category: 'Museum', image: '/categories/categoryMuseum.png' },
+    { category: 'Art Gallery', image: '/categories/categoryArtGallery.png' },
+    { category: 'Temple', image: '/categories/categoryTemple.png' },
+    { category: 'Church', image: '/categories/categoryChurch.png' },
+    { category: 'Monument', image: '/categories/categoryMonument.png' },
+    { category: 'Archaeological Site', image: '/categories/categoryArchaeologicalSite.png' },
+    { category: 'Waterfall', image: '/categories/categoryWaterfall.png' },
+    { category: 'Lake', image: '/categories/categoryLake.png' },
+    { category: 'River', image: '/categories/categoryRiver.png' },
+    { category: 'Zoo', image: '/categories/categoryZoo.png' },
+    { category: 'Botanical Garden', image: '/categories/categoryBotanicalGarden.png' },
+    { category: 'Theme Park', image: '/categories/categoryThemePark.png' },
+    { category: 'Wildlife Sanctuary', image: '/categories/categoryWildlifeSanctuary.png' },
+    { category: 'Scenic Viewpoint', image: '/categories/categoryScenicViewpoint.png' },
+    { category: 'Village', image: '/categories/categoryVillage.png' },
+    { category: 'City', image: '/categories/categoryCity.png' },
+    { category: 'Neighborhood', image: '/categories/categoryNeighborhood.png' },
+    { category: 'Market', image: '/categories/categoryMarket.png' },
+    { category: 'Shopping Mall', image: '/categories/categoryShoppingMall.png' },
+    { category: 'Library', image: '/categories/categoryLibrary.png' },
+    { category: 'University', image: '/categories/categoryUniversity.png' },
+    { category: 'Cave', image: '/categories/categoryCave.png' },
+    { category: 'Fortress', image: '/categories/categoryFortress.png' },
+    { category: 'Lighthouse', image: '/categories/categoryLighthouse.png' },
+    { category: 'Aquarium', image: '/categories/categoryAquarium.png' },
+    { category: 'Cultural Landmark', image: '/categories/categoryCulturalLandmark.png' },
+  ];
+
+  export const ACTIVITY_IMAGES = [
+    { activity: 'Hiking', image: '/activities/activityHiking.png' },
+    { activity: 'Surfing', image: '/activities/activitySurfing.png' },
+    { activity: 'Scuba Diving', image: '/activities/activityScubaDiving.png' },
+    { activity: 'Wildlife Safari', image: '/activities/activityWildlifeSafari.png' },
+    { activity: 'Bird Watching', image: '/activities/activityBirdWatching.png' },
+    { activity: 'Cultural Tours', image: '/activities/activityCulturalTours.png' },
+    { activity: 'Historical Tours', image: '/activities/activityHistoricalTours.png' },
+    { activity: 'Temple Visits', image: '/activities/activityTempleVisits.png' },
+    { activity: 'Waterfall Visits', image: '/activities/activityWaterfallVisits.png' },
+    { activity: 'Whale Watching', image: '/activities/activityWhaleWatching.png' },
+    { activity: 'Fishing', image: '/activities/activityFishing.png' },
+    { activity: 'Camping', image: '/activities/activityCamping.png' },
+    { activity: 'Rock Climbing', image: '/activities/activityRockClimbing.png' },
+    { activity: 'Cycling', image: '/activities/activityCycling.png' },
+    { activity: 'Kayaking', image: '/activities/activityKayaking.png' },
+    { activity: 'Canoeing', image: '/activities/activityCanoeing.png' },
+    { activity: 'Boating', image: '/activities/activityBoating.png' },
+    { activity: 'Hot Air Ballooning', image: '/activities/activityHotAirBallooning.png' },
+    { activity: 'Tea Plantation Tours', image: '/activities/activityTeaPlantationTours.png' },
+    { activity: 'Elephant Rides', image: '/activities/activityElephantRides.png' },
+    { activity: 'Village Tours', image: '/activities/activityVillageTours.png' },
+    { activity: 'Food Tours', image: '/activities/activityFoodTours.png' },
+    { activity: 'Trekking', image: '/activities/activityTrekking.png' },
+    { activity: 'Photography', image: '/activities/activityPhotography.png' },
+    { activity: 'Caving', image: '/activities/activityCaving.png' }
+  ];
   
   // CAMP SECTION
   export const PEOPLE_URL = [
