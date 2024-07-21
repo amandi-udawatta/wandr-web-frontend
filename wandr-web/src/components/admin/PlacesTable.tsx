@@ -2,115 +2,132 @@
 
 'use client';
 
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import TableCard from '@/components/admin/TableCard';
 import Chip from '@/components/general/Chip';
-import {Row, Col, Input} from 'antd'; // Assuming this is where your BlogPost component is located
-import { Avatar, Tooltip, Space,Button, message} from 'antd';
-// import Button from '@/components/Button';
+import { Row, Col, Input, Avatar, Tooltip, Space, Button, message } from 'antd';
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
-  
-  const tableData = [
-    { 
-      key: '1', 
-      number: '1', 
-      name: 'Sigiriya', 
-      imageUrl: '/sigiriya.png', 
-      categories: [
-        { imageUrl: '/categoryRock.png', text: 'Rock' },
-        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
-      ], 
-      chipImage: '/categoryRock.png', 
-      location: '7.956944,  80.759720', 
-      address: 'Matale, Sri Lanka',
-      description: 'Sigiriya is a fifth century fortress in Sri Lanka which has been carved out of an inselberg, a hill of hard volcanic rock. It towers around 600 feet (182.8m) from the forest and gardens below, and has a flat top. This is where the palace of King Kasyapa once stood, reachable up a winding stone staircase.',
-      activities: [
-        { imageUrl: '/activityHillClimbing.png', text: 'Hiking' },
-        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
-        { imageUrl: '/activityCulture.png', text: 'Cultural Exploration' },
-      ],
-    },
-    { key: '2', 
-      number: '2', 
-      name: 'Nilaweli Beach', 
-      imageUrl: '/nilaweli.png', 
-      categories: [
-        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
-      ],
-      chipImage: '/categoryOcean.png', 
-      location: '7.956944,  80.759720', 
-      address: 'Trincomalee, Sri Lanka',
-      description: 'Nilaveli beach is a quiet and relaxed beach, great for travellers looking for some rest and relaxation, some diving and snorkelling if of interest, from here one can also do a day trip to the elephant corridors around sigiriya and see some amazing herds of wild elephants.',
-      activities: [
-        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
-      ],
-    },
-    { key: '3', 
-      number: '3', 
-      name: 'Sigiriya', 
-      imageUrl: '/sigiriya.png', 
-      categories: [
-        { imageUrl: '/categoryRock.png', text: 'Rock' },
-        { imageUrl: '/categoryOcean.png', text: 'Ocean' },
-      ], 
-      chipImage: '/categoryRock.png', 
-      location: '7.956944,  80.759720', 
-      address: 'Matale, Sri Lanka',
-      description: 'Sigiriya is a fifth century fortress in Sri Lanka which has been carved out of an inselberg, a hill of hard volcanic rock. It towers around 600 feet (182.8m) from the forest and gardens below, and has a flat top. This is where the palace of King Kasyapa once stood, reachable up a winding stone staircase.',
-      activities: [
-        { imageUrl: '/activitySwimming.png', text: 'Swimming' },
-      ],
-    },
-  ]
+import { apiService, showNotification } from '@/services/apiService';
+import Cookies from 'js-cookie';
+import { CATEGORY_IMAGES, ACTIVITY_IMAGES } from '@/constants';
+import LoadingPopup from '@/components/general/LoadingPopup';
+
+
+// Define the types for better TypeScript support
+interface Category {
+  imageUrl: string;
+  text: string;
+}
+
+interface Activity {
+  imageUrl: string;
+  text: string;
+}
+
+interface Place {
+  key: string;
+  number: string;
+  name: string;
+  imageUrl: string;
+  categories: Category[];
+  chipImage: string;
+  location: string;
+  address: string;
+  description: string;
+  activities: Activity[];
+}
 
 const PlacesTable = () => {
-  const [data, setData] = useState(tableData);
+  const [data, setData] = useState<Place[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleDelete = async (key: string) => {
-    try {
-      const response = await fetch(`/api/delete/${key}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (response.ok) {
-        // Remove the row from the table data
-        setData(prevData => prevData.filter(item => item.key !== key));
-        console.log('Delete successful');
-      } else {
-        console.error('Delete failed');
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await apiService.get('/places');
+
+        if (response.success) {
+          const transformedData = response.data.map((place: any, index: number) => ({
+            key: place.id.toString(),
+            number: (index + 1).toString(),
+            name: place.name,
+            imageUrl: '/sigiriya.png', // Placeholder image
+            categories: place.categories.map((category: string) => {
+              const matchedCategory = CATEGORY_IMAGES.find(cat => cat.category === category);
+              return {
+                imageUrl: matchedCategory ? matchedCategory.image : '/categories/categoryRock.png',
+                text: category,
+              };
+            }),
+            chipImage: '/categories/categoryRock.png', // Placeholder image
+            location: `${place.latitude}, ${place.longitude}`,
+            address: place.address,
+            description: place.description,
+            activities: place.activities.map((activity: string) => {
+              const matchedActivity = ACTIVITY_IMAGES.find(act => act.activity === activity);
+              return {
+                imageUrl: matchedActivity ? matchedActivity.image : '/activities/activityCamping.png',
+                text: activity,
+              };
+            }),
+          }));
+
+          setData(transformedData);
+          message.success('Places loaded successfully');
+        } else {
+          throw new Error(response.message || 'Failed to fetch places');
+        }
+      } catch (error) {
+        message.error('Error loading places');
       }
+      finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleCancel = async (place_id: any) => {
+    const token = Cookies.get('accessToken');
+
+    try {
+      const response = await apiService.delete(`/places/delete/${place_id}`);
+
+      showNotification('success', 'Operation Status', response.message || 'Successfully Deleted the place');
+      setData(prevData => prevData.filter(item => item.key !== place_id));
+
     } catch (error) {
-      console.error('Error:', error);
+      showNotification('error', 'Operation Status', 'Error Deleting Place');
     }
   };
 
   const tableColumns = [
     { title: '#', dataIndex: 'number', key: 'number' },
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text: string, record: any) => (
-            <div className="flex items-center space-x-2 flex-row">
-              <Avatar src={record.imageUrl} />
-              <span>{text}</span>
-            </div>
-        ),
-        width: '200px',
-        filterSearch: true,
-        sorter: (a: any, b: any) => a.name.length - b.name.length,
-        sortDirections: ['descend'],
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string, record: any) => (
+        <div className="flex items-center space-x-2 flex-row">
+          <Avatar src={record.imageUrl} />
+          <span>{text}</span>
+        </div>
+      ),
+      width: '200px',
+      filterSearch: true,
+      sorter: (a: any, b: any) => a.name.length - b.name.length,
+      sortDirections: ['descend'],
     },
     { title: 'Location', dataIndex: 'location', key: 'location' },
-    { title: 'Address', 
-      dataIndex: 'address', 
+    {
+      title: 'Address',
+      dataIndex: 'address',
       key: 'address',
       sorter: (a: any, b: any) => a.name.length - b.name.length,
       sortDirections: ['descend'],
-    
     },
     {
       title: 'Description',
@@ -170,42 +187,31 @@ const PlacesTable = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (text: string ,record: any) => (
+      render: (text: string, record: any) => (
         <Space size="middle">
           <Button
             icon={<DeleteOutlined className='text-red-600' />}
-            onClick={() => handleDelete(record.key)}
+            onClick={() => handleCancel(record.key)}
             type="text"
           />
         </Space>
       ),
     },
-
-  ]
-
-  const [searchText, setSearchText] = useState('');
+  ];
 
   const handleSearch = (e: any) => {
     setSearchText(e.target.value);
-    // filterData(tableData, e.target.value);
   };
-
-  // const filterData = (data: any[], searchText: string) => {
-  //   return data.filter((item) =>
-  //     item.name.toLowerCase().includes(searchText.toLowerCase())
-  //   );
-  // };
 
   const filteredData = data.filter((item) => {
     const searchTextLower = searchText.toLowerCase();
-  
-    // Check if any of the fields contain the search text
+
     return (
       item.name.toLowerCase().includes(searchTextLower) ||
       item.address.toLowerCase().includes(searchTextLower) ||
       item.categories.some((category) =>
         category.text.toLowerCase().includes(searchTextLower)
-      )||
+      ) ||
       item.description.toLowerCase().includes(searchTextLower) ||
       item.activities.some((activity) =>
         activity.text.toLowerCase().includes(searchTextLower)
@@ -215,14 +221,14 @@ const PlacesTable = () => {
 
   return (
     <div className="p-4 gap-4 m-3">
-       <Row align={'middle'} gutter={8}>
+      <Row align={'middle'} gutter={8}>
         <Col span={16}>
           <Input
             placeholder="Search by name, address, category, description, or activity..."
             value={searchText}
             onChange={handleSearch}
-            style={{ marginBottom: 16, width:'500px', height:'40px' }}
-            prefix={<SearchOutlined style={{color:'#609734'}}/>}
+            style={{ marginBottom: 16, width: '500px', height: '40px' }}
+            prefix={<SearchOutlined style={{ color: '#609734' }} />}
           />
         </Col>
         <Col span={8}>
@@ -237,13 +243,17 @@ const PlacesTable = () => {
             </Button>
           </div>
         </Col>
-
-       </Row>
-        <TableCard 
-          columns={tableColumns} 
-          data={(filteredData.length == 0 && searchText === '') ? tableData : filteredData}
-          title="Places"
-        />
+      </Row>
+      <TableCard
+        columns={tableColumns}
+        data={(filteredData.length === 0 && searchText === '') ? data : filteredData}
+        title="Places"
+      />
+      <LoadingPopup
+        visible={isLoading}
+        title="Fetching All Places"
+        description="Please wait while we gather all the details for you. This might take a moment."
+      />
     </div>
   );
 };

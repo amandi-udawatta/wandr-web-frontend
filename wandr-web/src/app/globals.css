@@ -242,4 +242,8 @@ main {
   height: 3rem; /* equivalent to h-12 */
 }
 
+.custom-spin .ant-spin-dot-item {
+  background-color: #609734; /* Your desired color */
+}
+
 

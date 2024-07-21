@@ -2,8 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { LoadScript, Autocomplete } from '@react-google-maps/api';
-import { Input, Button, message } from 'antd';
-import axios from 'axios';
+import { Input } from 'antd';
 import { Library } from '@googlemaps/js-api-loader';
 
 const libraries: Library[] = ['places'];
@@ -22,7 +21,7 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: any) => v
     if (autocomplete) {
       const place = autocomplete.getPlace();
       if (place.place_id && place.formatted_address && place.geometry) {
-        onPlaceSelect({
+        const selectedPlace = {
           placeId: place.place_id,
           name: place.name,
           address: place.formatted_address,
@@ -30,24 +29,26 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: any) => v
             lat: place.geometry.location?.lat(),
             lng: place.geometry.location?.lng(),
           },
-        });
+        };
 
-        console.log(place);
+        onPlaceSelect(selectedPlace);
 
+        // Update the input value to show the full name of the selected place
+        setInputValue(selectedPlace.name);
       }
     }
   };
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
-        <Autocomplete 
-            onLoad={onLoad} 
-            onPlaceChanged={onPlaceChanged}
-            options={{
-                types: ['tourist_attraction'],
-                componentRestrictions: { country: 'LK' },
-            }}
-        >
+      <Autocomplete 
+        onLoad={onLoad} 
+        onPlaceChanged={onPlaceChanged}
+        options={{
+          types: ['tourist_attraction'],
+          componentRestrictions: { country: 'LK' },
+        }}
+      >
         <Input
           ref={inputRef}
           value={inputValue}

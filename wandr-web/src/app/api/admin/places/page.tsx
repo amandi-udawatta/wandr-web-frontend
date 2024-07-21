@@ -3,8 +3,11 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import PlacesTable from '@/components/admin/PlacesTable';
+import Cookies from 'js-cookie';
+
 
 const AdminPlaces: React.FC = () => {
+
   return (
     <div className="flex h-screen">
       <AdminSidebar active={'Places Management'}/>

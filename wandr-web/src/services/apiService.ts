@@ -1,29 +1,35 @@
+'use client'
+
 // services/apiService.ts
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL_BACKEND = 'http://localhost:8080/api';
+const API_BASE_URL_BFF = 'http://localhost:8081/api/proxy/forward'
+
 
 export const apiService = {
   get: async (url: string) => {
     const token = Cookies.get('accessToken'); // Adjust the token retrieval logic as needed
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+    console.log(token);
+    const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `${token}`,
       },
     });
     return handleResponse(response);
   },
   
   post: async (url: string, body?: any) => {
-    const token = Cookies.get('accessToken')
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+    const token = Cookies.get('accessToken');
+    console.log(token);
+    const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `${token}`,
       },
       body: body? JSON.stringify(body): null,
     });
@@ -31,12 +37,22 @@ export const apiService = {
   },
 
   delete: async (url: string) => {
-    const token = Cookies.get('accessToken')
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+    let token = Cookies.get('accessToken');
+    console.log(token);
+
+    console.log('Raw token:', token);
+
+    if (token) {
+      token = token.trim();
+    }
+  
+    console.log('Trimmed token:', token);
+
+    const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `${token}`,
       },
     });
     return handleResponse(response);

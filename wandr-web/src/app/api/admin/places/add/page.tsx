@@ -6,13 +6,18 @@ import {Col, message, Row } from 'antd';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import Chip from '@/components/general/Chip';
+import { CATEGORY_IMAGES, ACTIVITY_IMAGES } from '@/constants';
+
 import PlaceAutocomplete from '@/components/admin/PlaceAutoComplete';
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import { placeValidationSchema } from '@/validations/placeValidationSchema';
 import Button from '@/components/general/Button';
+import LoadingPopup from '@/components/general/LoadingPopup';
 
 import { apiService, showNotification } from '@/services/apiService';
+
 
 const libraries: ('places')[] = ['places'];
 
@@ -32,6 +37,9 @@ let place_id:any;
 
 const PlacesPage = () => {
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [activities, setActivities] = useState([]);
 
   const { 
     register, 
@@ -49,9 +57,11 @@ const PlacesPage = () => {
 
     const placeId = place.placeId;
     console.log(placeId);
+    setIsLoading(true);
 
     try{
-      const response = await apiService.post(`/places/add?placeId=${placeId}`);
+      const response = await apiService.get(`/places/add?placeId=${placeId}`);
+
 
       showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Place Details');
 
@@ -68,14 +78,17 @@ const PlacesPage = () => {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('image', data.image);
-      setValue('categories', data.categories);
-      setValue('activities', data.activities);
+      setCategories(data.categories);
+      setActivities(data.activities);
       setIsFormEnabled(true);
 
     }
     catch(error){
       showNotification('error', 'Fetch Status', 'Failed to Get details.');
       console.error('Fetching error:', error);
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,6 +105,8 @@ const PlacesPage = () => {
       setSelectedPlace(null);
       reset();
       setIsFormEnabled(false);
+      setCategories([]);
+      setActivities([]);
 
     } catch (error) {
       showNotification('error', 'Operation Status', 'Error Cancelling Place Details');
@@ -112,10 +127,32 @@ const PlacesPage = () => {
       setSelectedPlace(null);
       reset();
       setIsFormEnabled(false);
+      setCategories([]);
+      setActivities([]);
 
     } catch (error) {
         showNotification('error', 'Operation Status', 'Error Updating Place Details');
     }
+  };
+
+
+  const handleSave = async () => {
+    setSelectedPlace(null);
+    reset();
+    setIsFormEnabled(false);
+    setCategories([]);
+    setActivities([]);
+    showNotification('success', 'Operation Status', 'Successfully Saved');
+  }
+
+  const getCategoryImage = (category: any) => {
+    const matchedCategory = CATEGORY_IMAGES.find(cat => cat.category.toLowerCase() === category.toLowerCase());
+    return matchedCategory ? matchedCategory.image : '/categories/categoryRock.png';
+  };
+
+  const getActivityImage = (activity: any) => {
+    const matchedActivity = ACTIVITY_IMAGES.find(act => act.activity.toLowerCase() === activity.toLowerCase());
+    return matchedActivity ? matchedActivity.image : '/activities/activityCamping.png';
   };
 
   return (
@@ -141,7 +178,7 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="name"
                             type="text"
-                            placeholder="Enter name"
+                            placeholder="Name will be loaded here..."
                             {...register('name')}
                             disabled={!isFormEnabled}
                         />
@@ -155,21 +192,20 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="address"
                             type="text"
-                            placeholder="Enter address"
+                            placeholder="Address will be loaded here..."
                             {...register('address')}
                             disabled={!isFormEnabled}
                         />
                         {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="address">
+                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="description">
                             Description:
                         </label>
-                        <input
+                        <textarea
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="address"
-                            type="text"
-                            placeholder="Enter address"
+                            id="description"
+                            placeholder="Description will be loaded here..."
                             {...register('description')}
                             disabled={!isFormEnabled}
                         />
@@ -183,6 +219,7 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="latitude"
                             type="text"
+                            placeholder="Latitude will be loaded here..."
                             {...register('latitude')}
                             disabled
                         />
@@ -195,6 +232,7 @@ const PlacesPage = () => {
                             className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="longitude"
                             type="text"
+                            placeholder="Longitude will be loaded here..."
                             {...register('longitude')}
                             disabled
                         />
@@ -207,6 +245,7 @@ const PlacesPage = () => {
                                 variant="btn_green"
                                 height="h-btn-md"
                                 rounded="rounded-lg"
+                                onClick={handleSave}
                                 disabled={!isFormEnabled}
                             >
                                 Save
@@ -241,8 +280,9 @@ const PlacesPage = () => {
                     </div>
                 </form>
             </Col>
-            <Col>
-                <div className='w-96 h-96'>
+            <Col span={11} className='ml-12 flex flex-col justify-center mt-5'>
+              <Row className='justify-center'>
+                <div className='w-96 h-96 border border-black rounded-lg'>
                     {selectedPlace && (
                         <img
                             src={selectedPlace.image}
@@ -251,9 +291,58 @@ const PlacesPage = () => {
                         />
                     )}
                 </div>
+              </Row>
+              <Row className='m-5'>
+                  <div className="mb-4">
+                    <label className="block text-green-90 text-sm font-bold mb-2">
+                      Categories:
+                    </label>
+                    <div className="flex gap-2 flex-col">
+                      {categories && categories.length > 0 ? (
+                        categories.map((category, index) => (
+                          <Chip
+                            key={index}
+                            imageUrl={getCategoryImage(category)}
+                            text={category}
+                            size="default"
+                          />
+                        ))
+                      ) : (
+                        <span className='text-gray-500'>Categories will be loaded here...</span>
+                      )}
+                    </div>
+                  </div>
+              </Row>
+
+              <Row className='m-5'>
+                  <div className="mb-4">
+                    <label className="block text-green-90 text-sm font-bold mb-2">
+                      Activities:
+                    </label>
+                    <div className="flex gap-2 flex-col">
+                      {activities && activities.length > 0 ? (
+                        activities.map((activity, index) => (
+                          <Chip
+                            key={index}
+                            imageUrl={getActivityImage(activity)}
+                            text={activity}
+                            size="default"
+                          />
+                        ))
+                      ) : (
+                        <span className='text-gray-500'>Activities will be loaded here...</span>
+                      )}
+                    </div>
+                  </div>
+              </Row>
             </Col>
           </Row>
         </div>
+        <LoadingPopup
+          visible={isLoading}
+          title="Fetching Place Details"
+          description="Generating just the right description, categories and activities for the place! Please wait...."
+        />
       </div>
     </div>
   );
