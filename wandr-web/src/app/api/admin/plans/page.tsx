@@ -142,7 +142,7 @@ const AdminBusinessPlans: React.FC = () => {
                 onClick={handleAddPlan}
                 style={{ float: 'right', backgroundColor: '#609734', borderColor: '#609734' }}
               >
-                Add New Place
+                Add New Plan
               </Button>
             </Col>
           </Row>

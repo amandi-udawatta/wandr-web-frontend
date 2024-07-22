@@ -75,12 +75,12 @@ const PlacesTable = () => {
           }));
 
           setData(transformedData);
-          message.success('Places loaded successfully');
+          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Place Details');
         } else {
           throw new Error(response.message || 'Failed to fetch places');
         }
       } catch (error) {
-        message.error('Error loading places');
+        showNotification('error', 'Operation Status', 'Error Fetching Place Details');
       }
       finally {
         setIsLoading(false);
