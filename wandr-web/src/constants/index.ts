@@ -89,6 +89,41 @@ export const NAV_LINKS = [
     { activity: 'Photography', image: '/activities/activityPhotography.png' },
     { activity: 'Caving', image: '/activities/activityCaving.png' }
   ];
+
+
+  // constants.ts
+
+  export const SHOP_CATEGORIES = [
+    { id: 1, name: 'Handicrafts' },
+    { id: 2, name: 'Gems and Jewelry' },
+    { id: 3, name: 'Souvenirs' },
+    { id: 4, name: 'Tea and Spices' },
+    { id: 5, name: 'Clothing and Textiles' },
+    { id: 6, name: 'Antiques' },
+    { id: 7, name: 'Art and Paintings' },
+    { id: 8, name: 'Books and Stationery' },
+    { id: 9, name: 'Local Food and Snacks' },
+    { id: 10, name: 'Health and Wellness Products' },
+    { id: 11, name: 'Sports and Outdoor Equipment' },
+    { id: 12, name: 'Electronics and Gadgets' },
+    { id: 13, name: 'Leather Goods' },
+    { id: 14, name: 'Footwear' },
+    { id: 15, name: 'Fashion Accessories' },
+    { id: 16, name: 'Musical Instruments' },
+    { id: 17, name: 'Perfumes and Cosmetics' },
+    { id: 18, name: 'Organic Products' },
+    { id: 19, name: 'Ayurvedic Products' },
+    { id: 20, name: 'Gift Shops' },
+    { id: 21, name: 'Local Markets' },
+    { id: 22, name: 'Bakeries and Confectioneries' },
+    { id: 23, name: 'Farmers’ Markets' },
+    { id: 24, name: 'Furniture and Carpets' },
+    { id: 25, name: 'Camping and Hiking Gear' },
+    { id: 26, name: 'Pet Shops' },
+    { id: 27, name: 'Wine and Spirits' },
+    { id: 28, name: 'Toy Shops' },
+  ];
+
   
   // CAMP SECTION
   export const PEOPLE_URL = [

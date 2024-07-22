@@ -15,6 +15,9 @@ import Navbar from '@/components/general/Navbar';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
+import { SHOP_CATEGORIES } from '@/constants/index';
+import { apiService, showNotification } from '@/services/apiService';
+
 
 
 interface RegisterFormInputs {
@@ -30,6 +33,7 @@ interface RegisterFormInputs {
     businessAddress: string; // Array of strings for dynamic textboxes
     businessLanguages: string[]; // Array of strings for checkboxes
     businessCategory: string;
+    shopCategory: string;
     businessServices: { service: string }[];
     websiteURL: string;
     password:string;
@@ -88,10 +92,10 @@ const RegisterPage: React.FC = () => {
         formData.append('address', data.businessAddress);
         formData.append('languages', languageStings);
         if(data.businessCategory === 'Shop'){
-            formData.append('categoryId', '1');
+            formData.append('businessType', '1');
         }
         else{
-            formData.append('categoryId', '2');
+            formData.append('businessType', '2');
         }
         formData.append('services', serviceStrings);
         formData.append('websiteUrl', data.websiteURL);
@@ -112,8 +116,8 @@ const RegisterPage: React.FC = () => {
       
             const responseData = await response.json();
             // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
-            openNotification(responseData.message);
-            console.log('Login successful:', responseData.message);
+            showNotification('success', 'Login Status', responseData.message || 'Successfully Logged In');
+            console.log('Registration successful:', responseData.message);
             console.log('Access Token:', responseData.data.accessToken);
             console.log('Refresh Token:', responseData.data.refreshToken);
       
@@ -122,7 +126,7 @@ const RegisterPage: React.FC = () => {
       
             // Handle storing tokens or redirecting to authenticated area
           } catch (error) {
-            setError('Failed to Register. Please check your credentials.');
+            showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
             console.error('Registration error:', error);
           }
     };
@@ -130,6 +134,7 @@ const RegisterPage: React.FC = () => {
     const { Dragger } = Upload;
 
     const [file, setFile] = useState<File | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const props: UploadProps = {
         maxCount: 1,
@@ -472,6 +477,7 @@ const RegisterPage: React.FC = () => {
                                                     value="Shop"
                                                     {...register('businessCategory')}
                                                     className=" border-green-50 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-5 h-5"
+                                                    onChange={() => setSelectedCategory('Shop')}
                                                 />
                                                 <span className="ml-2 text-gray-700">Shop</span>
                                             </label>
@@ -481,12 +487,35 @@ const RegisterPage: React.FC = () => {
                                                     value="Service Provider"
                                                     {...register('businessCategory')}
                                                     className=" border-green-50 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-5 h-5"
+                                                    onChange={() => setSelectedCategory('Service Provider')}
                                                 />
                                                 <span className="ml-2 text-gray-700">Service Provider</span>
                                             </label>
                                         </div>
                                         {errors.businessCategory && <p className="text-red-500 text-xs">{errors.businessCategory.message}</p>}
                                     </div>
+
+                                    {selectedCategory === 'Shop' && (
+                                        <div className="mb-4">
+                                        <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="shopCategory">
+                                            Shop Category:
+                                        </label>
+                                        <select
+                                            id="shopCategory"
+                                            {...register('shopCategory', { required: 'Shop Category is required' })}
+                                            className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        >
+                                            <option value="">Select Shop Category</option>
+                                            {SHOP_CATEGORIES.map((category) => (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.shopCategory && <p className="text-red-500 text-xs">{errors.shopCategory.message}</p>}
+                                        </div>
+                                    )}
+
                                     <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="websiteURL">
                                             Business Website URL:
