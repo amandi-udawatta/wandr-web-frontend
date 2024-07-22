@@ -11,7 +11,7 @@ const API_BASE_URL_BFF = 'http://localhost:8081/api/proxy/forward'
 export const apiService = {
   get: async (url: string) => {
     const token = Cookies.get('accessToken'); // Adjust the token retrieval logic as needed
-    console.log(token);
+    // console.log(token);
     const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'GET',
       headers: {
@@ -24,7 +24,7 @@ export const apiService = {
   
   post: async (url: string, body?: any) => {
     const token = Cookies.get('accessToken');
-    console.log(token);
+    // console.log(token);
     const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'POST',
       headers: {
@@ -38,16 +38,8 @@ export const apiService = {
 
   delete: async (url: string) => {
     let token = Cookies.get('accessToken');
-    console.log(token);
-
-    console.log('Raw token:', token);
-
-    if (token) {
-      token = token.trim();
-    }
-  
-    console.log('Trimmed token:', token);
-
+    // console.log(token);
+    
     const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
       method: 'DELETE',
       headers: {
