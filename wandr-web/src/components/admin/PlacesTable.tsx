@@ -47,13 +47,15 @@ const PlacesTable = () => {
       setIsLoading(true);
       try {
         const response = await apiService.get('/places');
+        // console.log(response.data);
 
         if (response.success) {
           const transformedData = response.data.map((place: any, index: number) => ({
             key: place.id.toString(),
             number: (index + 1).toString(),
             name: place.name,
-            imageUrl: '/sigiriya.png', // Placeholder image
+            imageUrl: place.image, // Placeholder image
+            // setValue('image', 'http://localhost:8080/uploads/places/1721289392137.jpg');
             categories: place.categories.map((category: string) => {
               const matchedCategory = CATEGORY_IMAGES.find(cat => cat.category === category);
               return {
