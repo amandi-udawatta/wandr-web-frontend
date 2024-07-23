@@ -318,7 +318,7 @@ const AdvertisementsTable = () => {
 
   return (
     <div className="p-4 gap-4 m-3">
-       <Row align={'middle'} gutter={8}>
+      <Row align={'middle'} gutter={8}>
         <Col span={4}>
             <Button 
                 type={currentSet === 'PendingAdvsertisements' ? 'primary' : 'default'} 
@@ -354,7 +354,7 @@ const AdvertisementsTable = () => {
             prefix={<SearchOutlined style={{color:'#609734'}}/>}
           />
         </Col>
-       </Row>
+      </Row>
         <TableCard 
           columns={currentSet === 'PendingAdvsertisements' ? columnsPending : columnsApproved} 
           data={(filteredData.length == 0 && searchText === '') ? advertisements[currentSet] : filteredData}
