@@ -58,17 +58,17 @@ const BusinessTable = () => {
     try {
       const response = await apiService.get('/business/pending');
       console.log(response);
-  
+
       if (response.success) {
         if (response.data) {
           const transformedData = mapBackendDataToBusiness(response.data);
+          console.log(transformedData);
           setPendingBusiness(transformedData);
           if (status === 'pendingBusiness') {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
         } else {
-          // If response.data is null or undefined, set the state to an empty array or handle accordingly
           setPendingBusiness([]);
           if (status === 'pendingBusiness') {
             setCurrentSet([]);
@@ -85,39 +85,34 @@ const BusinessTable = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPendingData();
-  }, []);
-
   const fetchApprovedData = async () => {
     setIsLoading(true);
     try {
       const response = await apiService.get('/business/approved');
+      console.log(response);
 
       if (response.success) {
         if (response.data) {
           const transformedData = mapBackendDataToBusiness(response.data);
+          console.log(transformedData);
           setApprovedBusiness(transformedData);
           if (status === 'approvedBusiness') {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
         } else {
-          // If response.data is null or undefined, set the state to an empty array or handle accordingly
           setApprovedBusiness([]);
           if (status === 'approvedBusiness') {
             setCurrentSet([]);
           }
           showNotification('warning', 'Operation Status', 'No data available');
-        } 
-      }
-      else {
+        }
+      } else {
         throw new Error(response.message || 'Failed to fetch businesses');
       }
     } catch (error) {
       showNotification('error', 'Operation Status', 'Error Fetching Business Details');
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -126,34 +121,57 @@ const BusinessTable = () => {
     setIsLoading(true);
     try {
       const response = await apiService.get('/business/paid');
+      console.log(response);
 
       if (response.success) {
         if (response.data) {
           const transformedData = mapBackendDataToPaidBusiness(response.data);
+          console.log(transformedData);
           setPaidBusiness(transformedData);
           if (status === 'paidBusiness') {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
         } else {
-          // If response.data is null or undefined, set the state to an empty array or handle accordingly
           setPaidBusiness([]);
           if (status === 'paidBusiness') {
             setCurrentSet([]);
           }
           showNotification('warning', 'Operation Status', 'No data available');
-        } 
-      }
-      else {
+        }
+      } else {
         throw new Error(response.message || 'Failed to fetch businesses');
       }
     } catch (error) {
       showNotification('error', 'Operation Status', 'Error Fetching Business Details');
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    fetchPendingData();
+    fetchApprovedData();
+    fetchPaidData();
+  }, []);
+
+  useEffect(() => {
+    switch (status) {
+      case 'pendingBusiness':
+        setCurrentSet(pendingBusiness);
+        break;
+      case 'approvedBusiness':
+        setCurrentSet(approvedBusiness);
+        break;
+      case 'paidBusiness':
+        setCurrentSet(paidBusiness);
+        break;
+      default:
+        setCurrentSet(pendingBusiness);
+        break;
+    }
+  }, [status, pendingBusiness, approvedBusiness, paidBusiness]);
 
   const handleView = (record: any) => {
     // Show full details of the business
@@ -362,7 +380,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-3'>
             <Button 
                 type={status === 'pendingBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('pendingBusiness'); fetchPendingData(); }}
+                onClick={() => { setStatus('pendingBusiness');}}
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'pendingBusiness' ? '#609734' : undefined,
@@ -375,7 +393,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-6'>
             <Button 
                 type={status === 'approvedBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('approvedBusiness'); fetchApprovedData();}} 
+                onClick={() => { setStatus('approvedBusiness'); }} 
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'approvedBusiness' ? '#609734' : undefined,
@@ -388,7 +406,7 @@ const BusinessTable = () => {
         <Col span={3}  className='mr-3'>
             <Button 
                 type={status === 'paidBusiness' ? 'primary' : 'default'} 
-                onClick={() => {setStatus('paidBusiness');  fetchPaidData(); }} 
+                onClick={() => {setStatus('paidBusiness');}} 
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'paidBusiness' ? '#609734' : undefined,
@@ -409,9 +427,9 @@ const BusinessTable = () => {
         </Col>
       </Row>
         <TableCard 
-          columns={currentSet === paidBusiness? paidColumns : tableColumns} 
+          columns={status === 'paidBusiness'? paidColumns : tableColumns} 
           data={(filteredData.length == 0 && searchText === '') ? currentSet : filteredData}
-          title={currentSet === pendingBusiness ? 'Pending Business' : currentSet === approvedBusiness? 'Approved Business' : 'Paid Business'}
+          title={status === 'pendingBusiness' ? 'Pending Business' : status === 'approvedBusiness'? 'Approved Business' : 'Paid Business'}
         />
       <LoadingPopup
         visible={isLoading}

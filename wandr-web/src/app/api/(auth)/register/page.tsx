@@ -17,6 +17,7 @@ import Cookies from 'js-cookie';
 import { notification } from 'antd';
 import { SHOP_CATEGORIES } from '@/constants/index';
 import { apiService, showNotification } from '@/services/apiService';
+import MapWithDraggableMarker from '@/components/general/MapWithMarker';
 
 
 
@@ -31,6 +32,8 @@ interface RegisterFormInputs {
     ownerNIC: string;
     businessLocation: string;
     businessAddress: string; // Array of strings for dynamic textboxes
+    latitude: string;
+    longitude: string;
     businessLanguages: string[]; // Array of strings for checkboxes
     businessCategory: string;
     shopCategory: string;
@@ -135,6 +138,12 @@ const RegisterPage: React.FC = () => {
 
     const [file, setFile] = useState<File | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('');
+
+    const onPlaceSelected = (place) => {
+        setValue('businessLocation', place.address, { shouldValidate: true });
+        setValue('latitude', place.lat, { shouldValidate: true });
+        setValue('longitude', place.lng, { shouldValidate: true });
+      };
 
     const props: UploadProps = {
         maxCount: 1,
@@ -406,17 +415,25 @@ const RegisterPage: React.FC = () => {
                                     <h3 className="text-xl font-bold mb-4 text-green-90">Business Information</h3>
                                     <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessLocation">
-                                            Business Location:
+                                        Business Location:
                                         </label>
                                         <input
-                                            className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="businessLocation"
-                                            type="text"
-                                            placeholder="Enter Business Location"
-                                            {...register('businessLocation')}
+                                        className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        id="businessLocation"
+                                        type="text"
+                                        placeholder="Enter Business Location"
+                                        {...register('businessLocation')}
+                                        readOnly
                                         />
                                         {errors.businessLocation && <p className="text-red-500 text-xs">{errors.businessLocation.message}</p>}
                                     </div>
+
+                                    <div className="mb-4">
+                                        <MapWithDraggableMarker onPlaceSelected={onPlaceSelected} />
+                                    </div>
+
+                                    <input type="hidden" {...register('latitude')} />
+                                    <input type="hidden" {...register('longitude')} />
                                     <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessAddress">
                                             Business Address:
