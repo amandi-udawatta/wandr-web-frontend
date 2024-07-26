@@ -8,6 +8,7 @@ const Guide = () => {
       w-full pb-24'>
         <Image
           src = "/camp.svg"
+          // src = "http://localhost:3000/public/boat.png"
           alt = "camp"
           width={50}
           height={50}

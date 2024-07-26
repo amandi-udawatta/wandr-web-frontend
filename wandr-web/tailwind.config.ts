@@ -12,6 +12,7 @@ module.exports = {
           50: '#609734',
           40: '#94d063',
           90: '#332D1E',
+          35: '#acc792',
         },
         gray: {
           10: '#EEEEEE',
@@ -52,6 +53,9 @@ module.exports = {
         'btn-sm': '2rem',
         'btn-md': '2.5rem',
         'btn-lg': '3rem',
+      },
+      spacing: {
+        '150px': '150px',
       },
     },
   },
