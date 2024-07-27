@@ -1,79 +1,31 @@
-// src/components/StatisticsCarousel.tsx
-'use client'
+// components/CountryShowcase.tsx
+import React from 'react';
+import { Button } from 'antd';
 
-import React, { useEffect, useState } from 'react';
-import { Tooltip } from 'antd';
-import { TeamOutlined, FileTextOutlined, EnvironmentOutlined, AppstoreAddOutlined } from '@ant-design/icons';// Ensure Ant Design styles are included
-
-// Define statistics and image data
-const statsData = [
-  { title: 'Total Blogs', icon: <FileTextOutlined />, number: 1234 },
-  { title: 'Total Users', icon: <TeamOutlined />, number: 5678 },
-  { title: 'Total Places', icon: <EnvironmentOutlined />, number: 910 },
-  { title: 'Total Products', icon: <AppstoreAddOutlined />, number: 112 },
-];
-
-const imagesData = [
-  '/sigiriya.png',
-  '/nilaweli.png',
-  '/sigiriya.png',
-  '/nilaweli.png',
-];
-
-const BlogStatsCarousel: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % (statsData.length + imagesData.length));
-    }, 3000); // Change slide every 3 seconds
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
+const BlogStatsCarousel = () => {
   return (
-    <div className="overflow-hidden relative">
-      <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-        {/* Render statistics */}
-        {statsData.map((stat, index) => (
-          <div
-            key={`stat-${index}`}
-            className="w-64 h-40 flex-shrink-0 bg-white rounded-lg shadow-lg p-4 m-2 flex items-center space-x-4 hover:bg-gray-100 transition ease-in-out"
-          >
-            <Tooltip title={stat.title} placement="top">
-              <div className="text-2xl">{stat.icon}</div>
-            </Tooltip>
-            <div className="flex-grow">
-              <h3 className="text-lg font-semibold">{stat.title}</h3>
-              <p className="text-2xl font-bold">{stat.number}</p>
-            </div>
-          </div>
-        ))}
-
-        {/* Render images */}
-        {imagesData.map((image, index) => (
-          <div
-            key={`image-${index}`}
-            className="w-64 h-40 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden m-2 flex items-center justify-center"
-          >
-            <img src={image} alt={`Carousel ${index}`} className="w-full h-full object-cover" />
-          </div>
-        ))}
+    <div className="flex flex-col items-center p-10 bg-white">
+      <h1 className="text-4xl font-bold mb-6">AWESOME COUNTRY</h1>
+      <div className="flex justify-around w-full mb-6">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">3K+</h2>
+          <p>castles</p>
+        </div>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">31K+</h2>
+          <p>lakes</p>
+        </div>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">700+</h2>
+          <p>islands</p>
+        </div>
       </div>
-      <div className="absolute inset-0 flex items-center justify-between">
-        <button
-          onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + (statsData.length + imagesData.length)) % (statsData.length + imagesData.length))}
-          className="bg-gray-200 p-2 rounded-full"
-        >
-          &lt;
-        </button>
-        <button
-          onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % (statsData.length + imagesData.length))}
-          className="bg-gray-200 p-2 rounded-full"
-        >
-          &gt;
-        </button>
-      </div>
+      {/* <div className="relative flex justify-center items-center">
+        <div className="absolute w-64 h-96 bg-cover bg-center" style={{ backgroundImage: 'url(/sigiriya.png)' }}></div>
+        <div className="absolute w-64 h-96 bg-cover bg-center left-20" style={{ backgroundImage: 'url(/sigiriya.png)' }}></div>
+        <div className="absolute w-64 h-96 bg-cover bg-center left-40" style={{ backgroundImage: 'url(/sigiriya.png)' }}></div>
+      </div> */}
+      <Button type="primary" className="mt-8">READ MORE</Button>
     </div>
   );
 };
