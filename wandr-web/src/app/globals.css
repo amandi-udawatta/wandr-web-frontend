@@ -249,35 +249,11 @@ main {
   background-color: #609734; /* Your desired color */
 }
 
-.carousel-container {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-.stat-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  text-align: center;
-  background: #fafafa;
-}
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.stat-icon {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-.stat-title {
-  font-size: 18px;
-  font-weight: bold;
-}
-.stat-number {
-  font-size: 24px;
-  color: #1890ff;
+.relative:hover .peer {
+  opacity: 0.5;
 }
 
+.relative .peer:hover {
+  opacity: 1 !important;
+}
 
