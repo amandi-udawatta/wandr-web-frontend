@@ -4,14 +4,16 @@ import BlogPost from './blogPost/page';
 import { Button } from 'antd'; // Assuming this is where your BlogPost component is located
 import Navbar from '@/components/general/Navbar';
 import Footer from '@/components/general/Footer';
-import {BlogHero} from '@/components/general/BlogHero';
-import BlogStatsCarousel from '@/components/general/BlogStatsCarousel';
+import {BlogHero} from '@/components/general/Blogs/BlogHero';
+import BlogStatsCarousel from '@/components/general/Blogs/BlogStatsCarousel';
+import RecentBlogs from '@/components/general/Blogs/RecentBlogs';
 
 const BlogPage = () => {
   return (
     <div>
       <Navbar/>
       <BlogHero/>
+      <RecentBlogs/>
       <BlogStatsCarousel/>
       {/* <BlogPost
         title="My First Blog Post"
