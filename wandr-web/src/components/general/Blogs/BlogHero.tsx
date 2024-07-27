@@ -1,14 +1,14 @@
 import Image from 'next/image'
 import React from 'react'
-import Button from './Button'
+import Button from '../Button'
 import { PEOPLE_URL } from '@/constants'
 
 export const BlogHero = () => {
   return (
     <section className='max-container padding-container
-    flex flex-col gap-20 py-10 pb-32 md:gap-28 lg:py-20 xl:flex-row mt-5'>
+    flex flex-col gap-20 md:gap-28 lg:pt-20 lg:pb-5 xl:flex-row mt-5'>
       {/* <div className='hero-map'/> */}
-        <div className='relative z-20 flex flex-1 flex-col xl:w-1/2 '>
+        <div className='relative z-20 flex flex-1 flex-col xl:w-1/2'>
             <Image
                 src = "/activities/activityHotAirBallooning.png"
                 alt = "camp"
@@ -46,7 +46,7 @@ export const BlogHero = () => {
             
         </div>
 
-        <div className='relative hidden lg:flex flex-1 justify-center items-start mt-[-20px] '>
+        <div className='relative hidden lg:flex flex-1 justify-center items-start mt-[-20px]'>
             <div className="absolute w-3/5 h-[450px] bg-green-35 opacity-40 rounded-t-full"></div>
             <img
                 src="/blogHero.jpg"
