@@ -12,6 +12,7 @@ const BlogPage = () => {
     <div>
       <Navbar/>
       <BlogHero/>
+      <BlogStatsCarousel/>
       {/* <BlogPost
         title="My First Blog Post"
         author="John Doe"
