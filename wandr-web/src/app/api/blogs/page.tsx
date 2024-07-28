@@ -7,6 +7,7 @@ import Footer from '@/components/general/Footer';
 import {BlogHero} from '@/components/general/Blogs/BlogHero';
 import BlogStatsCarousel from '@/components/general/Blogs/BlogStatsCarousel';
 import RecentBlogs from '@/components/general/Blogs/RecentBlogs';
+import FilterByCategory from '@/components/general/Blogs/FilterByCategory';
 
 const BlogPage = () => {
   return (
@@ -15,6 +16,7 @@ const BlogPage = () => {
       <BlogHero/>
       <RecentBlogs/>
       <BlogStatsCarousel/>
+      <FilterByCategory/>
       {/* <BlogPost
         title="My First Blog Post"
         author="John Doe"
