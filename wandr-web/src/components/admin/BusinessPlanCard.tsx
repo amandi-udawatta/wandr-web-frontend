@@ -11,8 +11,8 @@ interface BusinessCardProps {
   description: string
   features: string[]
   price: number
-  onEdit: () => void
-  onDelete: () => void
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 const getIconByTitle = (title: string): React.ReactNode => {
@@ -30,25 +30,25 @@ const getIconByTitle = (title: string): React.ReactNode => {
 
 const BusinessPlanCard: React.FC<BusinessCardProps> = ({title, description, features, price, onEdit, onDelete }) => {
   return (
-    <Card className="max-w-sm mx-auto p-4 border border-gray-200 rounded-lg shadow-md">
+    <Card className="max-w-96 min-w-72 mx-auto p-4 border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-green-35 hover:shadow-2xl transition-all duration-500 ease-in-out">
         <div className="flex justify-between items-start">
             <div className=" w-full">
                 <h2 className="text-xl font-bold">{title}</h2>
                 <p className="text-gray-500">{description}</p>
             </div>
             <div className="flex gap-2">
-            <Button 
+            {onEdit && <Button 
                 type="text" 
                 icon={<EditOutlined />} 
                 onClick={onEdit} 
                 className="text-black"
-            />
-            <Button 
+            />}
+            {onDelete && <Button 
                 type="text" 
                 icon={<DeleteOutlined />} 
                 onClick={onDelete} 
                 className="text-red-600"
-            />
+            />}
             </div>
         </div>
         <div className="mt-4">

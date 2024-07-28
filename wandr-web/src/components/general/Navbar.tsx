@@ -14,8 +14,8 @@ const Navbar = () => {
     // console.log(pathname);
 
     return(
-        <nav className=" flexBetween 
-        max-container padding-container relative z-30 py-5">
+        <nav className="sticky top-0 flexBetween 
+        max-container padding-container z-30 py-5 bg-white">
             <Link href = "/">
                 <Image src= "/logo.png" alt="logo" width={150} height={19}></Image>
             </Link>
