@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { LoadScript, Autocomplete } from '@react-google-maps/api';
 import { Input } from 'antd';
 import { Library } from '@googlemaps/js-api-loader';
@@ -8,10 +8,21 @@ import { Library } from '@googlemaps/js-api-loader';
 const libraries: Library[] = ['places'];
 const apiKey = 'AIzaSyCc0kuXm4K-GyRHuXAbp7WDO5-kqmwt4Fg'; // Replace with your API key
 
-const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: any) => void }) => {
+interface PlaceAutocompleteProps {
+  onPlaceSelect: (place: any) => void;
+  options?: google.maps.places.AutocompleteOptions;
+}
+
+const PlaceAutocomplete: React.FC<PlaceAutocompleteProps> = ({ onPlaceSelect, options }) => {
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (autocomplete) {
+      autocomplete.setOptions(options || {});
+    }
+  }, [autocomplete, options]);
 
   const onLoad = (autocompleteInstance: google.maps.places.Autocomplete) => {
     setAutocomplete(autocompleteInstance);
@@ -41,19 +52,16 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: any) => v
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
-      <Autocomplete 
-        onLoad={onLoad} 
+      <Autocomplete
+        onLoad={onLoad}
         onPlaceChanged={onPlaceChanged}
-        options={{
-          types: ['tourist_attraction'],
-          componentRestrictions: { country: 'LK' },
-        }}
+        options={options || {}}
       >
         <Input
           ref={inputRef}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Search tourist attractions in Sri Lanka"
+          placeholder="Search places"
           style={{ width: '100%' }}
           className='h-12'
         />

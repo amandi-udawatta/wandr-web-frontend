@@ -10,14 +10,15 @@ import {MinusCircleOutlined, PlusCircleOutlined} from '@ant-design/icons';
 import { Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
+import { message, Upload, Button as AntButton, Modal } from 'antd';
 import Navbar from '@/components/general/Navbar';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
 import { SHOP_CATEGORIES } from '@/constants/index';
 import { apiService, showNotification } from '@/services/apiService';
-import MapWithDraggableMarker from '@/components/general/MapWithMarker';
+import GoogleMapsAutocomplete from '@/components/general/MapWithMarker';
+import PlaceAutocomplete from '@/components/admin/PlaceAutoComplete';
 
 
 
@@ -32,8 +33,8 @@ interface RegisterFormInputs {
     ownerNIC: string;
     businessLocation: string;
     businessAddress: string; // Array of strings for dynamic textboxes
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
     businessLanguages: string[]; // Array of strings for checkboxes
     businessCategory: string;
     shopCategory: string;
@@ -93,6 +94,8 @@ const RegisterPage: React.FC = () => {
         formData.append('ownerContact', data.ownerContact);
         formData.append('ownerNic', data.ownerNIC);
         formData.append('address', data.businessAddress);
+        formData.append('latitude', data.latitude.toString());
+        formData.append('longitude', data.longitude.toString());
         formData.append('languages', languageStings);
         if(data.businessCategory === 'Shop'){
             formData.append('businessType', '1');
@@ -103,6 +106,8 @@ const RegisterPage: React.FC = () => {
         formData.append('services', serviceStrings);
         formData.append('websiteUrl', data.websiteURL);
         formData.append('password', hashedPassword); 
+
+        console.log("Form Data:",formData);
 
         try {
             
@@ -138,11 +143,13 @@ const RegisterPage: React.FC = () => {
 
     const [file, setFile] = useState<File | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [markerPosition, setMarkerPosition] = useState({ lat: 6.9271, lng: 79.8612 }); // Default position (Colombo, Sri Lanka)
 
-    const onPlaceSelected = (place) => {
-        setValue('businessLocation', place.address, { shouldValidate: true });
-        setValue('latitude', place.lat, { shouldValidate: true });
-        setValue('longitude', place.lng, { shouldValidate: true });
+    const handlePlaceSelected = ({ lat, lng, address }) => {
+        setValue('businessLocation', address);
+        setValue('latitude', lat);
+        setValue('longitude', lng);
+        console.log(lat, lng);
       };
 
     const props: UploadProps = {
@@ -418,22 +425,22 @@ const RegisterPage: React.FC = () => {
                                         Business Location:
                                         </label>
                                         <input
-                                        className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        id="businessLocation"
-                                        type="text"
-                                        placeholder="Enter Business Location"
-                                        {...register('businessLocation')}
-                                        readOnly
-                                        />
-                                        {errors.businessLocation && <p className="text-red-500 text-xs">{errors.businessLocation.message}</p>}
-                                    </div>
+                                            className="appearance-none border border-green-50 rounded-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="businessLocation"
+                                            type="text"
+                                            placeholder="Enter Business Location"
+                                            {...register('businessLocation')}
+                                            readOnly
+                                            />
+                                            {errors.businessLocation && <p className="text-red-500 text-xs">{errors.businessLocation.message}</p>}
+                                        </div>
 
-                                    <div className="mb-4">
-                                        <MapWithDraggableMarker onPlaceSelected={onPlaceSelected} />
-                                    </div>
+                                        <div className="mb-4">
+                                            <GoogleMapsAutocomplete onPlaceSelected={handlePlaceSelected} />
+                                        </div>
 
-                                    <input type="hidden" {...register('latitude')} />
-                                    <input type="hidden" {...register('longitude')} />
+                                        <input type="hidden" {...register('latitude')} />
+                                        <input type="hidden" {...register('longitude')} />
                                     <div className="mb-4">
                                         <label className="block text-green-90 text-sm font-bold mb-2" htmlFor="businessAddress">
                                             Business Address:
