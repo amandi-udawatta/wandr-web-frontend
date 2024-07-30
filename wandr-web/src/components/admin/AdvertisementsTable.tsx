@@ -30,11 +30,12 @@ const AdvertisementsTable = () => {
           const formattedData = response.data.map((item:any, index:any) => ({
             key: index + 1,
             number: index + 1,
+            id: item.adId,
             shopName: item.shopName,
-            shopImageUrl: item.image || '/loginPage.png',
+            shopImageUrl: item.image || '/advertisement.jpg',
             title: item.title,
             description: item.description,
-            adImageUrl: item.image || '/loginPage.png',
+            adImageUrl: item.image || '/advertisement2.jpeg',
             package: item.businessPlan,
             requestedDate: new Date(item.requestedDate).toLocaleDateString()
           }));
@@ -70,6 +71,7 @@ const AdvertisementsTable = () => {
           const formattedData = response.data.map((item:any, index:any) => ({
             key: index + 1,
             number: index + 1,
+            id: item.adId,
             shopName: item.shopName,
             shopImageUrl: item.image || '/loginPage.png',
             title: item.title,
@@ -120,51 +122,45 @@ const AdvertisementsTable = () => {
     }
   }, [status, pendingAdvertisements, approvedAdvertisements]);
 
-  const handleApprove = async (record: any) => {
+  const handleApprove = async (record_key: any) => {
     // Send an API call to approve the business registration request
+    
+    console.log("record.key",record_key);
+    console.log("record.id",record_key);
     try {
-      const response = await fetch('/api/approveAdvertisement', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ businessId: record.key }),
-      });
+      const response = await apiService.get(`/ads/approve/${record_key}`);
   
-      if (response.ok) {
-        message.success('Advertisement approved successfully');
-        // Optionally update the table data to reflect the change
+      if (response.success) {
+        showNotification('success', 'Operation Status', response.message || 'Successfully Approved the Business');
+        setPendingAdvertisements(prevData => prevData.filter(item => item.key !== record_key));
       } else {
-        message.error('Failed to approve the Advertisement');
+        showNotification('error', 'Operation Status', response.message || 'Failed to approve the business');
       }
     } catch (error) {
-      console.error('Error approving Advertisement:', error);
-      message.error('Error approving the Advertisement');
+      console.error('Error approving business:', error);
+      showNotification('error', 'Operation Status', 'Successfully Approved the Business');
     }
   };
 
-  const handleDecline = async (record: any) => {
-    // Send an API call to decline the business registration request
+  const handleDecline = async (record_key: any) => {
+    // Send an API call to approve the business registration request
+    console.log("record.key",record_key);
+    console.log("record.id",record_key);
+
     try {
-      const response = await fetch('/api/declineAdvertisement', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ businessId: record.key }),
-      });
+      const response = await apiService.get(`/ads/decline/${record_key}`);
   
-      if (response.ok) {
-        message.success('Advertisement declined successfully');
-        // Optionally update the table data to reflect the change
+      if (response.success) {
+        showNotification('success', 'Operation Status', response.message || 'Successfully Declined the Business');
+        setApprovedAdvertisements(prevData => prevData.filter(item => item.key !== record_key));
       } else {
-        message.error('Failed to decline the business');
+        showNotification('error', 'Operation Status', response.message || 'Failed to decline the business');
       }
     } catch (error) {
-      console.error('Error declining Advertisement:', error);
-      message.error('Error declining the Advertisement');
+      console.error('Error declining business:', error);
+      showNotification('error', 'Operation Status', 'Successfully Declined the Business');
     }
-};
+  };
 
   
 
@@ -230,12 +226,12 @@ const AdvertisementsTable = () => {
         <Space size="middle">
           <Button
             icon={<SmileOutlined className='text-green-50' />}
-            onClick={() => handleApprove(record.key)}
+            onClick={() => handleApprove(record.id)}
             type="text"
           />
           <Button
             icon={<FrownOutlined className='text-red-600' />}
-            onClick={() => handleDecline(record.key)}
+            onClick={() => handleDecline(record.id)}
             type="text"
           />
         </Space>
@@ -306,12 +302,12 @@ const AdvertisementsTable = () => {
         <Space size="middle">
           <Button
             icon={<SmileOutlined className='text-green-50' />}
-            onClick={() => handleApprove(record.key)}
+            onClick={() => handleApprove(record.id)}
             type="text"
           />
           <Button
             icon={<FrownOutlined className='text-red-600' />}
-            onClick={() => handleDecline(record.key)}
+            onClick={() => handleDecline(record.id)}
             type="text"
           />
         </Space>

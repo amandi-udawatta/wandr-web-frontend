@@ -14,6 +14,7 @@ import { apiService, showNotification } from '@/services/apiService';
       key: String(index + 1), // Ensuring the key is a string
       number: String(index + 1), // Ensuring the number is a string
       name: item.name,
+      id: item.businessId,
       address: item.address,
       type: item.businessType == 'Shop' ? item.shopCategory : item.businessType,
       imageUrl: item.shopImage, // Assuming the images are stored in the /images directory
@@ -29,6 +30,7 @@ import { apiService, showNotification } from '@/services/apiService';
       key: String(index + 1), // Ensuring the key is a string
       number: String(index + 1), // Ensuring the number is a string
       name: item.name,
+      id: item.businessId,
       address: item.address,
       type: item.businessType == 'Shop' ? item.shopCategory : item.businessType,
       imageUrl: item.shopImage, // Assuming the images are stored in the /images directory
@@ -68,6 +70,7 @@ const BusinessTable = () => {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          setArray('pendingBusiness');
         } else {
           setPendingBusiness([]);
           if (status === 'pendingBusiness') {
@@ -100,6 +103,7 @@ const BusinessTable = () => {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          setArray('approvedBusiness');
         } else {
           setApprovedBusiness([]);
           if (status === 'approvedBusiness') {
@@ -132,6 +136,7 @@ const BusinessTable = () => {
             setCurrentSet(transformedData);
           }
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          setArray('paidBusiness');
         } else {
           setPaidBusiness([]);
           if (status === 'paidBusiness') {
@@ -152,11 +157,12 @@ const BusinessTable = () => {
 
   useEffect(() => {
     fetchPendingData();
-    fetchApprovedData();
-    fetchPaidData();
+    // setArray();
+    // fetchApprovedData();
+    // fetchPaidData();
   }, []);
 
-  useEffect(() => {
+  const setArray = (status:any) => {
     switch (status) {
       case 'pendingBusiness':
         setCurrentSet(pendingBusiness);
@@ -171,7 +177,7 @@ const BusinessTable = () => {
         setCurrentSet(pendingBusiness);
         break;
     }
-  }, [status, pendingBusiness, approvedBusiness, paidBusiness]);
+  };
 
   const handleView = (record: any) => {
     // Show full details of the business
@@ -193,49 +199,43 @@ const BusinessTable = () => {
 
   const handleApprove = async (record: any) => {
     // Send an API call to approve the business registration request
+    
+    console.log("record.key",record.key);
+    console.log("record.id",record.id);
     try {
-      const response = await fetch('/api/approveBusiness', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ businessId: record.key }),
-      });
+      const response = await apiService.get(`/business/approve/${record.id}`);
   
-      if (response.ok) {
-        message.success('Business approved successfully');
-        // Optionally update the table data to reflect the change
+      if (response.success) {
+        showNotification('success', 'Operation Status', response.message || 'Successfully Approved the Business');
+        setPendingBusiness(prevData => prevData.filter(item => item.key !== record.key));
       } else {
-        message.error('Failed to approve the business');
+        showNotification('error', 'Operation Status', response.message || 'Failed to approve the business');
       }
     } catch (error) {
       console.error('Error approving business:', error);
-      message.error('Error approving the business');
+      showNotification('error', 'Operation Status', 'Successfully Approved the Business');
     }
   };
 
   const handleDecline = async (record: any) => {
-    // Send an API call to decline the business registration request
+    // Send an API call to approve the business registration request
+    console.log("record.key",record.key);
+    console.log("record.id",record.id);
+
     try {
-      const response = await fetch('/api/declineBusiness', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ businessId: record.key }),
-      });
+      const response = await apiService.get(`/business/decline/${record.id}`);
   
-      if (response.ok) {
-        message.success('Business declined successfully');
-        // Optionally update the table data to reflect the change
+      if (response.success) {
+        showNotification('success', 'Operation Status', response.message || 'Successfully Declined the Business');
+        setPendingBusiness(prevData => prevData.filter(item => item.key !== record.key));
       } else {
-        message.error('Failed to decline the business');
+        showNotification('error', 'Operation Status', response.message || 'Failed to decline the business');
       }
     } catch (error) {
       console.error('Error declining business:', error);
-      message.error('Error declining the business');
+      showNotification('error', 'Operation Status', 'Successfully Declined the Business');
     }
-};
+  };
 
   const tableColumns = [
     { title: '#', dataIndex: 'number', key: 'number' },
@@ -317,12 +317,12 @@ const BusinessTable = () => {
         />
         <Button
           icon={<SmileOutlined className='text-green-600' />}
-          onClick={() => handleApprove(record.key)}
+          onClick={() => handleApprove(record)}
           type="text"
         />
         <Button
           icon={<FrownOutlined className='text-red-600' />}
-          onClick={() => handleDecline(record.key)}
+          onClick={() => handleDecline(record)}
           type="text"
         />
       </Space>
@@ -336,7 +336,7 @@ const BusinessTable = () => {
         />
         <Button
           icon={<FrownOutlined className='text-red-600' />}
-          onClick={() => handleDecline(record.key)}
+          onClick={() => handleDecline(record)}
           type="text"
         />
       </Space>
@@ -350,7 +350,7 @@ const BusinessTable = () => {
         />
         <Button
           icon={<FrownOutlined className='text-red-600' />}
-          onClick={() => handleDecline(record.key)}
+          onClick={() => handleDecline(record)}
           type="text"
         />
         {/* <Button
@@ -380,7 +380,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-3'>
             <Button 
                 type={status === 'pendingBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('pendingBusiness');}}
+                onClick={() => { setStatus('pendingBusiness'); fetchPendingData();  }}
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'pendingBusiness' ? '#609734' : undefined,
@@ -393,7 +393,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-6'>
             <Button 
                 type={status === 'approvedBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('approvedBusiness'); }} 
+                onClick={() => { setStatus('approvedBusiness'); fetchApprovedData(); setArray('approvedBusiness'); }} 
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'approvedBusiness' ? '#609734' : undefined,
@@ -406,7 +406,7 @@ const BusinessTable = () => {
         <Col span={3}  className='mr-3'>
             <Button 
                 type={status === 'paidBusiness' ? 'primary' : 'default'} 
-                onClick={() => {setStatus('paidBusiness');}} 
+                onClick={() => {setStatus('paidBusiness'); fetchPaidData(); setArray('paidBusiness');  }}
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'paidBusiness' ? '#609734' : undefined,

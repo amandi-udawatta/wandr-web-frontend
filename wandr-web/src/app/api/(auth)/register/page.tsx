@@ -103,6 +103,12 @@ const RegisterPage: React.FC = () => {
         else{
             formData.append('businessType', '2');
         }
+        if(data.businessCategory === 'Shop'){
+            formData.append('shop_category', data.shopCategory)
+        }
+        else{
+            formData.append('shop_category', '0')
+        }
         formData.append('services', serviceStrings);
         formData.append('websiteUrl', data.websiteURL);
         formData.append('password', hashedPassword); 

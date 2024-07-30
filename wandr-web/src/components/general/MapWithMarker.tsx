@@ -58,6 +58,9 @@ const GoogleMapsAutocomplete = ({ onPlaceSelected }) => {
         <Autocomplete
           onLoad={onLoad}
           onPlaceChanged={() => { }}
+          options={{
+            componentRestrictions: { country: 'LK' },
+          } }
         >
           <input
             type="text"

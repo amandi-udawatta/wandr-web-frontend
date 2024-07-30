@@ -25,8 +25,7 @@ export const NAV_LINKS = [
     { href: '/api/admin/businesses', key: 'businesses', label: 'Businesses', icon: ShopOutlined },
     { href: '/api/admin/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
     { href: '/api/admin/plans', key: 'plans', label: 'Buiness Plans', icon: SafetyCertificateOutlined },
-    { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
-    { href: '/api/admin/signout', key: 'signout', label: 'Sign Out', icon: LogoutOutlined },
+    // { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
 
   ];
 
