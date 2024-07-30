@@ -73,6 +73,11 @@ const CATEGORY_IMAGES = [
     { category: 'Temple', image: '/categories/categoryTemple.png' },
     { category: 'Church', image: '/categories/categoryChurch.png' },
     { category: 'Monument', image: '/categories/categoryMonument.png' },
+    { category: 'Museum', image: '/categories/categoryMuseum.png' },
+    { category: 'Art Gallery', image: '/categories/categoryArtGallery.png' },
+    { category: 'Temple', image: '/categories/categoryTemple.png' },
+    { category: 'Church', image: '/categories/categoryChurch.png' },
+    { category: 'Monument', image: '/categories/categoryMonument.png' },
 ];
 
 
@@ -96,26 +101,32 @@ const FilterByCategory: React.FC = () => {
       <h2 className="text-5xl font-semibold mb-6 text-center">Filter By Category</h2>
       <p className="text-md text-gray-30 mb-12 text-center">Select a category to explore blogs tailored to your interests and discover insightful stories from our diverse community.</p>
       
-      <div className="flex justify-center mb-12">
-        {CATEGORY_IMAGES.map(category => (
-          <Tag
-            key={category.category}
-            color={selectedCategory === category.category ? 'blue' : 'default'}
-            onClick={() => setSelectedCategory(category.category)}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-            className='border max-w-max border-gray-200 rounded-xl'
-          >
-            {category.image && <Avatar
-                src={category.image}
-                alt={category.category}
-                size="large"
-                style={{ marginRight: 8 }}
-                className='p-1'
-            />}
-            <span style={{fontSize: '12px'}}>{category.category}</span>
-          </Tag>
-        ))}
+      <div className="w-full overflow-x-auto hide-scrollbar">
+        <div className="flex justify-start items-center space-x-4 p-4">
+          {CATEGORY_IMAGES.map((category) => (
+            <Tag
+              key={category.category}
+              color={selectedCategory === category.category ? 'blue' : 'default'}
+              onClick={() => setSelectedCategory(category.category)}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+              className="border border-gray-200 rounded-xl"
+            >
+              {category.image && (
+                <Avatar
+                  src={category.image}
+                  alt={category.category}
+                  size="large"
+                  style={{ marginRight: 8 }}
+                  className="p-1"
+                />
+              )}
+              <span style={{ fontSize: '12px' }}>{category.category}</span>
+            </Tag>
+          ))}
+        </div>
       </div>
+
+
         
       {filteredBlogs.length === 0 ? (
         <div className="flex flex-col text-center text-gray-500 min-h-[100px] justify-center align-middle">
