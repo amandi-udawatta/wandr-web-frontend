@@ -47,7 +47,7 @@ const handleDelete = (title: string) => {
 
 const BusinessPlans: React.FC = () => {
   return (
-    <section className='max-container padding-container flex flex-col gap-20 md:gap-28 xl:flex-row mt-5'>
+    <section className='max-container padding-container flex flex-col gap-20 md:gap-28 xl:flex-row mt-48 mb-48'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {plans.map((plan) => (
             <BusinessPlanCard

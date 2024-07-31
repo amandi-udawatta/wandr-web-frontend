@@ -12,7 +12,6 @@ import {
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
     { href: '/api/blogs', key: 'blog', label: 'Blog' },
-    { href: '/api/register', key: 'register', label: 'Register' },
     { href: '/api/business', key: 'business', label: 'Join as a Business' },
     // { href: '/api/contact', key: 'contact', label: 'Contact Us' },
   ];
