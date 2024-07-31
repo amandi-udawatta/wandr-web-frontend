@@ -7,6 +7,7 @@ import {
   SafetyCertificateOutlined,
   SettingOutlined,
   LogoutOutlined,
+  WechatWorkOutlined,
 } from '@ant-design/icons';
 
 export const NAV_LINKS = [
@@ -24,6 +25,17 @@ export const NAV_LINKS = [
     { href: '/api/admin/businesses', key: 'businesses', label: 'Businesses', icon: ShopOutlined },
     { href: '/api/admin/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
     { href: '/api/admin/plans', key: 'plans', label: 'Buiness Plans', icon: SafetyCertificateOutlined },
+    // { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
+
+  ];
+
+  export const BUSINESS_SIDEBAR_ITEMS = [
+
+    { href: '/api/business/dashboard', key: 'dashboard', label: 'Dashboard', icon: PieChartOutlined  },
+    { href: '/api/business/chat', key: 'chat', label: 'Chat', icon: WechatWorkOutlined },
+    { href: '/api/business/products', key: 'products', label: 'Products', icon: ShopOutlined },
+    { href: '/api/business/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
+    { href: '/api/business/profile', key: 'profile', label: 'Profile', icon: SafetyCertificateOutlined },
     // { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },
 
   ];

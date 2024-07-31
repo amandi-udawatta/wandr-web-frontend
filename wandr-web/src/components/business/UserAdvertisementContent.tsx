@@ -114,16 +114,6 @@ export  const UserAdvertisementContent = () => {
                                 </div>
                             </Col>
                         </Row>
-
-
-
-
-
-
-
-
-
-
                     </Form>
                 </div>
             </Col>

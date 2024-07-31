@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from "next/image";
 import Link from 'next/link';
-import {SIDEBAR_ITEMS, USER_SIDEBAR_ITEMS} from '@/constants';
+import {SIDEBAR_ITEMS, BUSINESS_SIDEBAR_ITEMS} from '@/constants';
 
 
 interface UserSidebarProps{
@@ -16,7 +16,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({active}) => {
       </div>
       <nav className='text-green-50 px-2'>
         <ul className="space-y-4">
-          {USER_SIDEBAR_ITEMS.map((link) => (
+          {BUSINESS_SIDEBAR_ITEMS.map((link) => (
               <Link href={link.href} key={link.key}
               className={` custom-list-item  ${active === link.label? 'bg-green-50 text-white border rounded-xl' : ''}`}>
                   <link.icon />
