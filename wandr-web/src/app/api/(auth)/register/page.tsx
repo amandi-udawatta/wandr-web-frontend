@@ -137,6 +137,8 @@ const RegisterPage: React.FC = () => {
       
             Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
             Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
+
+            window.location.href = '/api/business/dashboard';
       
             // Handle storing tokens or redirecting to authenticated area
           } catch (error) {

@@ -69,7 +69,7 @@ const BusinessTable = () => {
           if (status === 'pendingBusiness') {
             setCurrentSet(transformedData);
           }
-          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
           setArray('pendingBusiness');
         } else {
           setPendingBusiness([]);
@@ -102,7 +102,7 @@ const BusinessTable = () => {
           if (status === 'approvedBusiness') {
             setCurrentSet(transformedData);
           }
-          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
           setArray('approvedBusiness');
         } else {
           setApprovedBusiness([]);
@@ -135,7 +135,7 @@ const BusinessTable = () => {
           if (status === 'paidBusiness') {
             setCurrentSet(transformedData);
           }
-          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
           setArray('paidBusiness');
         } else {
           setPaidBusiness([]);
