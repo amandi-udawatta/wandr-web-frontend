@@ -68,7 +68,7 @@ const BarChart = ({ data }: { data: BarChartData }) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem : any) {
-            return `$${tooltipItem.raw}`;
+            return `Rs.${tooltipItem.raw}`;
           },
         },
       },

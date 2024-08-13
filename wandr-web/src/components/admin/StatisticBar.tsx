@@ -3,7 +3,7 @@ import { ArrowDownOutlined } from '@ant-design/icons';
 
 interface StatisticCardProps {
   title: string
-  value: number
+  value: any
   color: string
   icon: React.ReactNode;
   bgColor: string;
