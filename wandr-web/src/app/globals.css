@@ -258,3 +258,21 @@ main {
   opacity: 1 !important;
 }
 
+
+.carousel-container .slick-dots li {
+  width: 20px; /* Change the width to create a line */
+  height: 4px; /* Adjust the height to create a thicker line */
+  border-radius: 0; /* Remove border radius to create straight lines */
+  background-color: grey; /* Set the default color to grey */
+}
+
+.carousel-container .slick-dots li button {
+  width: 100%;
+  height: 100%;
+  background: transparent; /* Ensure the button background is transparent */
+  border: none;
+}
+
+.carousel-container .slick-dots li.slick-active {
+  background-color: darkgrey; /* Set the color for the active line */
+}

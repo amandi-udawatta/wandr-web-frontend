@@ -114,7 +114,7 @@ const PlacesTable = () => {
       key: 'name',
       render: (text: string, record: any) => (
         <div className="flex items-center space-x-2 flex-row">
-          {/* <Avatar src={record.imageUrl} /> */}
+          <Avatar src={record.imageUrl} />
           <span>{text}</span>
         </div>
       ),
