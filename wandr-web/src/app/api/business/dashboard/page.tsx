@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import BusinessDashboardContent from '@/components/business/UserDashboardContent'
+import BusinessDashboardContent from '@/components/business/BusinessDashboardContent'
 import BusinessSideBar from '@/components/business/UserSidebar';
 
 const BusinessDashboard: React.FC = () => {

@@ -284,7 +284,7 @@ const PlacesPage = () => {
                 </form>
             </Col>
             <Col span={11} className='ml-12 flex flex-col justify-center mt-5'>
-              {/* <Row className='justify-center'>
+              <Row className='justify-center'>
                 <div className='w-96 h-96 border border-black rounded-lg'>
                     {selectedPlace && (
                         <img
@@ -294,7 +294,7 @@ const PlacesPage = () => {
                         />
                     )}
                 </div>
-              </Row> */}
+              </Row>
               <Row className='m-5'>
                   <div className="mb-4">
                     <label className="block text-green-90 text-sm font-bold mb-2">
