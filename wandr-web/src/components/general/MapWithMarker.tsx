@@ -1,7 +1,7 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
-
-const apiKey = 'AIzaSyCc0kuXm4K-GyRHuXAbp7WDO5-kqmwt4Fg';
 
 const mapContainerStyle = {
   height: '400px',
@@ -13,11 +13,12 @@ const center = {
   lng: 80.7718
 };
 
-const GoogleMapsAutocomplete = ({ onPlaceSelected }) => {
+const GoogleMapsAutocomplete = ({ onPlaceSelected }: { onPlaceSelected: (place: any) => void }) => {
   const [map, setMap] = useState(null);
   const [position, setPosition] = useState(center);
 
-  const onLoad = (autocomplete) => {
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    // console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       if (place.geometry && place.geometry.location) {
@@ -48,7 +49,7 @@ const GoogleMapsAutocomplete = ({ onPlaceSelected }) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} libraries={['places']}>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={position}
