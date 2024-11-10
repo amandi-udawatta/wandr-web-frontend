@@ -77,6 +77,7 @@ const PlacesTable = () => {
           }));
 
           setData(transformedData);
+          console.log('data fetched');
           showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Place Details');
         } else {
           throw new Error(response.message || 'Failed to fetch places');
