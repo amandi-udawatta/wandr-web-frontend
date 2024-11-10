@@ -69,13 +69,13 @@ const BusinessTable = () => {
           if (status === 'pendingBusiness') {
             setCurrentSet(transformedData);
           }
-          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
-          setArray('pendingBusiness');
+          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          setStatus('pendingBusiness');
         } else {
           setPendingBusiness([]);
-          if (status === 'pendingBusiness') {
-            setCurrentSet([]);
-          }
+          // if (status === 'pendingBusiness') {
+          //   setCurrentSet([]);
+          // }
           showNotification('warning', 'Operation Status', 'No data available');
         }
       } else {
@@ -99,16 +99,16 @@ const BusinessTable = () => {
           const transformedData = mapBackendDataToBusiness(response.data);
           console.log(transformedData);
           setApprovedBusiness(transformedData);
-          if (status === 'approvedBusiness') {
-            setCurrentSet(transformedData);
-          }
-          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          // if (status === 'approvedBusiness') {
+          //   setCurrentSet(transformedData);
+          // }
+          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
           setArray('approvedBusiness');
         } else {
           setApprovedBusiness([]);
-          if (status === 'approvedBusiness') {
-            setCurrentSet([]);
-          }
+          // if (status === 'approvedBusiness') {
+          //   setCurrentSet([]);
+          // }
           showNotification('warning', 'Operation Status', 'No data available');
         }
       } else {
@@ -132,16 +132,16 @@ const BusinessTable = () => {
           const transformedData = mapBackendDataToPaidBusiness(response.data);
           console.log(transformedData);
           setPaidBusiness(transformedData);
-          if (status === 'paidBusiness') {
-            setCurrentSet(transformedData);
-          }
-          // showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
+          // if (status === 'paidBusiness') {
+          //   setCurrentSet(transformedData);
+          // }
+          showNotification('success', 'Operation Status', response.message || 'Successfully Fetched Business Details');
           setArray('paidBusiness');
         } else {
           setPaidBusiness([]);
-          if (status === 'paidBusiness') {
-            setCurrentSet([]);
-          }
+          // if (status === 'paidBusiness') {
+          //   setCurrentSet([]);
+          // }
           showNotification('warning', 'Operation Status', 'No data available');
         }
       } else {
@@ -156,13 +156,17 @@ const BusinessTable = () => {
 
 
   useEffect(() => {
+    // Fetch all data on mount
     fetchPendingData();
-    // setArray();
-    // fetchApprovedData();
-    // fetchPaidData();
+    fetchApprovedData();
+    fetchPaidData();
+  
+    // Set initial status and data
+    setStatus('pendingBusiness');
+    setArray(status);
   }, []);
-
-  const setArray = (status:any) => {
+  
+  const setArray = async (status:any) => {
     switch (status) {
       case 'pendingBusiness':
         setCurrentSet(pendingBusiness);
@@ -208,6 +212,9 @@ const BusinessTable = () => {
       if (response.success) {
         showNotification('success', 'Operation Status', response.message || 'Successfully Approved the Business');
         setPendingBusiness(prevData => prevData.filter(item => item.key !== record.key));
+        setStatus('approvedBusiness');
+        fetchApprovedData();
+        setArray(status);
       } else {
         showNotification('error', 'Operation Status', response.message || 'Failed to approve the business');
       }
@@ -380,7 +387,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-3'>
             <Button 
                 type={status === 'pendingBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('pendingBusiness'); fetchPendingData();  }}
+                onClick={() => { setStatus('pendingBusiness'); setArray('pendingBusiness');  }}
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'pendingBusiness' ? '#609734' : undefined,
@@ -393,7 +400,7 @@ const BusinessTable = () => {
         <Col span={3} className='mr-6'>
             <Button 
                 type={status === 'approvedBusiness' ? 'primary' : 'default'} 
-                onClick={() => { setStatus('approvedBusiness'); fetchApprovedData(); setArray('approvedBusiness'); }} 
+                onClick={() => { setStatus('approvedBusiness'); setArray('approvedBusiness'); }} 
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'approvedBusiness' ? '#609734' : undefined,
@@ -406,7 +413,7 @@ const BusinessTable = () => {
         <Col span={3}  className='mr-3'>
             <Button 
                 type={status === 'paidBusiness' ? 'primary' : 'default'} 
-                onClick={() => {setStatus('paidBusiness'); fetchPaidData(); setArray('paidBusiness');  }}
+                onClick={() => {setStatus('paidBusiness'); setArray('paidBusiness');  }}
                 style={{
                     marginLeft: 8,
                     backgroundColor: status === 'paidBusiness' ? '#609734' : undefined,
