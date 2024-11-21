@@ -99,21 +99,18 @@ const RegisterPage: React.FC = () => {
         formData.append('languages', languageStings);
         if(data.businessCategory === 'Shop'){
             formData.append('businessType', '1');
+            formData.append('shopCategory', data.shopCategory)
         }
         else{
             formData.append('businessType', '2');
-        }
-        if(data.businessCategory === 'Shop'){
-            formData.append('shop_category', data.shopCategory)
-        }
-        else{
-            formData.append('shop_category', '0')
+            formData.append('shopCategory', '0')
         }
         formData.append('services', serviceStrings);
         formData.append('websiteUrl', data.websiteURL);
         formData.append('password', hashedPassword); 
 
         console.log("Form Data:",formData);
+        console.log("shop category:",data.shopCategory);
 
         try {
             
@@ -123,14 +120,14 @@ const RegisterPage: React.FC = () => {
             });
       
             console.log('Registration response:', response);
-      
-            if (!response.ok) {
+
+            const responseData = await response.json();
+
+            if (responseData.success == false) {
               throw new Error('Failed to Register');
             }
-      
-            const responseData = await response.json();
             // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
-            showNotification('success', 'Login Status', responseData.message || 'Successfully Logged In');
+            showNotification('success', 'Registration Status', responseData.message || 'Successfully Registered');
             console.log('Registration successful:', responseData.message);
             console.log('Access Token:', responseData.data.accessToken);
             console.log('Refresh Token:', responseData.data.refreshToken);
@@ -141,8 +138,8 @@ const RegisterPage: React.FC = () => {
             window.location.href = '/api/business/dashboard';
       
             // Handle storing tokens or redirecting to authenticated area
-          } catch (error) {
-            showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
+          } catch (error : any) {
+            showNotification('error', 'Registration Status', error);
             console.error('Registration error:', error);
           }
     };

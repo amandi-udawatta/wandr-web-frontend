@@ -61,7 +61,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-          const response = await apiService.get('/statistics/dashboard');
+          const response = await apiService.get('/admin/statistics/dashboard');
           console.log('Fetch response:', response);
 
           if (response.success) {
@@ -139,7 +139,7 @@ const Dashboard = () => {
     const fetchRevenueData = async () => {
       setIsLoading(true);
       try {
-        const response = await apiService.get('/statistics/total-revenue');
+        const response = await apiService.get('/admin/statistics/total-revenue');
         console.log('Fetch response:', response);
 
         if (response.success) {
@@ -173,7 +173,7 @@ const Dashboard = () => {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const response = await apiService.get('/statistics/user-country');
+        const response = await apiService.get('/admin/statistics/user-country');
         console.log('Fetch response:', response);
   
         if (response.success) {
