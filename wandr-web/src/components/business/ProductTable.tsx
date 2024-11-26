@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
-import { Avatar, Button, Space, Table, Tooltip, Input, InputNumber } from 'antd';
-import { DeleteOutlined, EditOutlined, SaveOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {Avatar, Button, Space, Table, Tooltip, Input, InputNumber, Modal, Col, Form, Image} from 'antd';
+import {DeleteOutlined, EditOutlined, SaveOutlined, ExclamationCircleOutlined, InboxOutlined} from '@ant-design/icons';
 import TableCard from '../admin/TableCard';
+import Dragger from "antd/lib/upload/Dragger";
 
 interface Product {
   id: number;
@@ -11,6 +13,16 @@ interface Product {
   description: string;
   quantity: number;
   imageUrl: string;
+}
+
+interface mode{
+  mode: string;
+  p1: string
+  p2: string
+  p3: string
+  p4: string
+  p5: string
+  upload?: boolean | false
 }
 
 const initialProducts: Product[] = [
@@ -64,21 +76,34 @@ const initialProducts: Product[] = [
 const ProductsTable: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [editingRow, setEditingRow] = useState<number | null>(null); // Track which row is being edited
-
-  const handleEdit = (id: number) => {
-    setEditingRow(id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [product,setProduct] = useState<Product>({id: 0, name: '', price: 0, advance: 0, description: '', quantity: 0, imageUrl: ''});
+  const [mode, setMode] = useState<mode>({mode: 'add',p1: "Upload Image", p2: "Quantity", p3: "Name of the Product", p4: "Description", p5: "Price",upload:false});
+  const handleEdit = (row: Product) => {
+    setMode({mode: 'edit', p1: "Change Image", p2: "Change Quantity", p3: "Edit Name of the Product", p4: "Change Description", p5: "Change Price"})
+    setProduct(row);
+    setIsModalOpen(true);
   };
 
-  const handleSave = (id: number) => {
-    setEditingRow(null);
-    // Save data here if needed (e.g., send to server)
+
+  const handleAdd = () => {
+    setMode({mode: 'add', p1: "Upload Image", p2: "Quantity", p3: "Name of the Product", p4: "Description", p5: "Price"})
+    setProduct({id: 0, name: '', price: 0, advance: 0, description: '', quantity: 0, imageUrl: ''});
+    setIsModalOpen(true);
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const handleSave = () => {
+    setIsModalOpen(false);
   };
 
   const handleChange = (id: number, field: string, value: any) => {
     setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, [field]: value } : product
-      )
+        prevProducts.map((product) =>
+            product.id === id ? { ...product, [field]: value } : product
+        )
     );
   };
 
@@ -88,14 +113,14 @@ const ProductsTable: React.FC = () => {
       dataIndex: 'id',
       key: 'id',
       render: (text: number, record: Product) => (
-        <div className="flex items-center space-x-2 flex-row">
-          <span>{text}</span>
-          {record.quantity < 5 && (
-            <Tooltip title="This product is low on quantity">
-              <ExclamationCircleOutlined style={{ color: 'red', marginLeft: '8px' }} />
-            </Tooltip>
-          )}
-        </div>
+          <div className="flex items-center space-x-2 flex-row">
+            <span>{text}</span>
+            {record.quantity < 5 && (
+                <Tooltip title="This product is low on quantity">
+                  <ExclamationCircleOutlined style={{ color: 'red', marginLeft: '8px' }} />
+                </Tooltip>
+            )}
+          </div>
       ),
     },
     {
@@ -103,17 +128,17 @@ const ProductsTable: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string, record: Product) =>
-        editingRow === record.id ? (
-          <Input
-            value={text}
-            onChange={(e) => handleChange(record.id, 'name', e.target.value)}
-          />
-        ) : (
-          <div className="flex items-center space-x-2 flex-row">
-            <Avatar src={record.imageUrl} size={'large'} />
-            <span>{text}</span>
-          </div>
-        ),
+          editingRow === record.id ? (
+              <Input
+                  value={text}
+                  onChange={(e) => handleChange(record.id, 'name', e.target.value)}
+              />
+          ) : (
+              <div className="flex items-center space-x-2 flex-row">
+                <Avatar src={record.imageUrl} size={'large'} />
+                <span>{text}</span>
+              </div>
+          ),
       width: '400px'
     },
     {
@@ -121,104 +146,97 @@ const ProductsTable: React.FC = () => {
       dataIndex: 'price',
       key: 'price',
       render: (text: number, record: Product) =>
-        editingRow === record.id ? (
-          <InputNumber
-            value={text}
-            onChange={(value) => handleChange(record.id, 'price', value)}
-            min={0}
-          />
-        ) : (
-          <span>{text}</span>
-        ),
+          editingRow === record.id ? (
+              <InputNumber
+                  value={text}
+                  onChange={(value) => handleChange(record.id, 'price', value)}
+                  min={0}
+              />
+          ) : (
+              <span>{text}</span>
+          ),
     },
     {
       title: 'Advance',
       dataIndex: 'advance',
       key: 'advance',
       render: (text: number, record: Product) =>
-        editingRow === record.id ? (
-          <InputNumber
-            value={text}
-            onChange={(value) => handleChange(record.id, 'advance', value)}
-            min={0}
-          />
-        ) : (
-          <span>{text}</span>
-        ),
+          editingRow === record.id ? (
+              <InputNumber
+                  value={text}
+                  onChange={(value) => handleChange(record.id, 'advance', value)}
+                  min={0}
+              />
+          ) : (
+              <span>{text}</span>
+          ),
     },
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
       render: (text: string, record: Product) =>
-        editingRow === record.id ? (
-          <Input
-            value={text}
-            onChange={(e) => handleChange(record.id, 'description', e.target.value)}
-          />
-        ) : (
-          <Tooltip title={text}>
-            <span>{text.length > 50 ? `${text.slice(0, 50)}... ` : text}</span>
-          </Tooltip>
-        ),
+          editingRow === record.id ? (
+              <Input
+                  value={text}
+                  onChange={(e) => handleChange(record.id, 'description', e.target.value)}
+              />
+          ) : (
+              <Tooltip title={text}>
+                <span>{text.length > 50 ? `${text.slice(0, 50)}... ` : text}</span>
+              </Tooltip>
+          ),
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
       render: (text: number, record: Product) =>
-        editingRow === record.id ? (
-          <InputNumber
-            value={text}
-            onChange={(value) => handleChange(record.id, 'quantity', value)}
-            min={0}
-            max={999}
-            controls={{
-              upIcon: <span>+</span>,
-              downIcon: <span>-</span>,
-            }}
-          />
-        ) : (
-          <span style={{ color: text < 5 ? 'red' : 'inherit', fontWeight: text < 5 ? 'bold' : 'normal' }}>
-            {text}
-          </span>
-        ),
+          editingRow === record.id ? (
+              <InputNumber
+                  value={text}
+                  onChange={(value) => handleChange(record.id, 'quantity', value)}
+                  min={0}
+                  max={999}
+                  controls={{
+                    upIcon: <span>+</span>,
+                    downIcon: <span>-</span>,
+                  }}
+              />
+          ) : (
+              <span style={{ color: text < 5 ? 'red' : 'inherit', fontWeight: text < 5 ? 'bold' : 'normal' }}>
+        {text}
+        </span>
+          ),
     },
     {
       title: 'Action',
       key: 'action',
-      render: (text: string, record: Product) =>
-        editingRow === record.id ? (
-          <Button
-            icon={<SaveOutlined className='text-green-600' />}
-            type="text"
-            onClick={() => handleSave(record.id)}
-          />
-        ) : (
-          <Space size="middle">
-            <Button
-              icon={<EditOutlined className='text-blue-600' />}
-              type="text"
-              onClick={() => handleEdit(record.id)}
-            />
-            <Button
-              icon={<DeleteOutlined className='text-red-600' />}
-              type="text"
-            />
-          </Space>
-        ),
+      render: (text: string, record:Product ) =>
+          editingRow === record.id ? (
+              <Button
+                  icon={<SaveOutlined className='text-green-600' />}
+                  type="text"
+                  onClick={() => handleSave()}
+              />
+          ) : (
+              <Space size="middle">
+                <Button
+                    icon={<EditOutlined className='text-blue-600' />}
+                    type="text"
+                    onClick={() => handleEdit(record)}
+                />
+                <Button
+                    icon={<DeleteOutlined className='text-red-600' />}
+                    type="text"
+                />
+              </Space>
+          ),
     },
   ];
 
   return (
       <div className="p-4">
-        <div className="relative">
-          <Button type="primary" className="bg-green-50 w-32 rounded-lg hover:!bg-green-600 absolute right-10 top-5" onClick={()=>handleAdd()}>
-            Add Product
-          </Button>
-        </div>
-
-
         <Modal width={750} title={mode.mode=="add"?"Add New Product":"Edit Product Details"} centered open={isModalOpen} onOk={handleSave} onCancel={handleCancel}>
           <Col  className="flex flex-row justify-around">
             <Col span={11}>
@@ -301,5 +319,5 @@ const ProductsTable: React.FC = () => {
       </div>
   );
 };
-
 export default ProductsTable;
+
