@@ -211,13 +211,94 @@ const ProductsTable: React.FC = () => {
   ];
 
   return (
-    <div className="p-4">
-      <TableCard 
-        columns={columns}
-        data={products}
-        title='Your Products'
-      />
-    </div>
+      <div className="p-4">
+        <div className="relative">
+          <Button type="primary" className="bg-green-50 w-32 rounded-lg hover:!bg-green-600 absolute right-10 top-5" onClick={()=>handleAdd()}>
+            Add Product
+          </Button>
+        </div>
+
+
+        <Modal width={750} title={mode.mode=="add"?"Add New Product":"Edit Product Details"} centered open={isModalOpen} onOk={handleSave} onCancel={handleCancel}>
+          <Col  className="flex flex-row justify-around">
+            <Col span={11}>
+              <Form.Item
+
+                  name="upload"
+                  label={<span  className="text-green-50 font-semibold text-[16px]">{mode.p1}</span>}
+                  valuePropName="fileList"
+                  getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
+
+              >
+                <Dragger name="files" action="/upload.do" >
+                  {mode.mode === 'edit' ? <Image src={product?.imageUrl} height={150} className="h-max-48"/> : <InboxOutlined className="text-green-50 text-6xl my-5" />}
+
+
+                  <p className="text-green-50">Click or drag file to this area to upload</p>
+
+                </Dragger>
+              </Form.Item>
+              <Form.Item
+                  name = {mode.p2}
+                  rules={[{ required: true, message: "Please input the "+mode.p2+"!" }]}
+              >
+                <span className="text-green-50 font-semibold text-[16px] ">{mode.p2}</span>
+                <Input className="h-10 bg-gray-20/10 mt-2" value={product?.quantity}
+                       onChange={(e) => setProduct(prev => ({ ...prev, quantity: parseInt(e.target.value, 10)|0 }))}
+                />
+
+              </Form.Item>
+
+
+            </Col>
+
+
+            <Col span={11}>
+              <Form.Item
+                  name = {mode.p3}
+                  rules={[{ required: true, message: "Please input the "+mode.p3+"!" }]}
+              >
+                <span className="text-green-50 font-semibold text-[16px] ">{mode.p3}</span>
+                <Input className="h-10 bg-gray-20/10 mt-2"
+                       value={product?.name}
+                       onChange={(e) => setProduct(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </Form.Item>
+              <Form.Item
+                  name={mode.p4}
+                  rules={[{ required: true, message: "Please input the Description!" }]}
+              >
+                <span className="text-green-50 font-semibold text-[16px] ">{mode.p4}</span>
+                <Input.TextArea className="!min-h-[120px] bg-gray-20/10 mt-2"
+                                value={product?.description}
+                                onChange={(e) => setProduct(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </Form.Item>
+              <Form.Item
+                  name = {mode.p5}
+                  rules={[{ required: true, message: "Please input the "+mode.p5+"!" }]}
+              >
+                <span className="text-green-50 font-semibold text-[16px] ">{mode.p5}</span>
+                <Input className="h-10 bg-gray-20/10 mt-2"
+                       value={product?.price}
+                       onChange={(e) => setProduct(prev => ({ ...prev, price: parseInt(e.target.value, 10)|0 }))}
+                />
+              </Form.Item>
+
+
+
+            </Col>
+
+          </Col>
+        </Modal>
+
+        <TableCard
+            columns={columns}
+            data={products}
+            title='Your Products'
+            function={handleAdd}
+        />
+      </div>
   );
 };
 
