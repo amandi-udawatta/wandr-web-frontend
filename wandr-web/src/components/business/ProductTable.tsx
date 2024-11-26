@@ -237,6 +237,13 @@ const ProductsTable: React.FC = () => {
 
   return (
       <div className="p-4">
+        <div className="relative">
+          <Button type="primary" className="bg-green-50 w-32 rounded-lg hover:!bg-green-600 absolute right-10 top-5" onClick={()=>handleAdd()}>
+            Add Product
+          </Button>
+        </div>
+
+
         <Modal width={750} title={mode.mode=="add"?"Add New Product":"Edit Product Details"} centered open={isModalOpen} onOk={handleSave} onCancel={handleCancel}>
           <Col  className="flex flex-row justify-around">
             <Col span={11}>

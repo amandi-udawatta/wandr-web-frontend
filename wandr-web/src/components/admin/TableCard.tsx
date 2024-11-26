@@ -16,9 +16,7 @@ const TableCard: React.FC<TableCardProps> = ({ columns, data, title, pagination 
         <div className="border border-gray-200 rounded-xl p-5">
             <div className="w-full flex flex-row justify-between">
                 <h1 className="text-xl font-bold h-full mb-3 mt-3 my-text">{title}</h1>
-                <Button type="primary" className="bg-green-50 w-32 rounded-lg hover:!bg-green-600" onClick={()=>addproduct()}>
-                    Add Product
-                </Button>
+
             </div>
             <Table
                 columns={columns}
