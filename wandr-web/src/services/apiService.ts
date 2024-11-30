@@ -36,6 +36,21 @@ export const apiService = {
     return handleResponse(response);
   },
 
+    
+  put: async (url: string, body?: any) => {
+    const token = Cookies.get('accessToken');
+    // console.log(token);
+    const response = await fetch(`${API_BASE_URL_BFF}${url}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`,
+      },
+      body: body? JSON.stringify(body): null,
+    });
+    return handleResponse(response);
+  },
+
   delete: async (url: string) => {
     let token = Cookies.get('accessToken');
     // console.log(token);
