@@ -13,11 +13,11 @@ import {
   EyeInvisibleFilled,
   EyeOutlined,
 } from "@ant-design/icons";
-import StatCard from "@/components/business/StatisticCard";
+import StatCard from "@/components/business/dashboard/StatisticCard";
 import TableCard from "@/components/admin/TableCard";
 import Image from "next/image";
 import { apiService, showNotification } from "@/services/apiService"; // Assuming you're using apiService
-import LoadingPopup from "../general/LoadingPopup";
+import LoadingPopup from "../../general/LoadingPopup";
 
 const { Panel } = Collapse;
 

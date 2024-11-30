@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import BusinessProductsTable from '@/components/business/ProductTable'
+import BusinessProductsTable from '@/components/business/products/ProductTable'
 import BusinessSideBar from '@/components/business/UserSidebar';
 
 const BusinessProducts: React.FC = () => {

@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^3.6.0",
     "@react-google-maps/api": "^2.19.3",
     "@shadcn/ui": "^0.0.4",
+    "@stomp/stompjs": "^7.0.0",
     "antd": "^5.18.3",
     "axios": "^1.7.2",
     "babel-plugin-import": "^1.13.8",

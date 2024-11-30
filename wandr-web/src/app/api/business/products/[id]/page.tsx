@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader';
 import BusinessSideBar from '@/components/business/UserSidebar';
-import ProductDetailsCard from '@/components/business/ProductDetails'; // Adjust path as needed
+import ProductDetailsCard from '@/components/business/products/ProductDetails'; // Adjust path as needed
 
 const ProductPage: React.FC = () => {
   const { id } = useParams();

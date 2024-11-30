@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Space, Table, Tooltip} from 'antd';
 import {ExclamationCircleOutlined } from '@ant-design/icons';
-import TableCard from '../admin/TableCard';
+import TableCard from '../../admin/TableCard';
 import { useRouter } from 'next/navigation';
 import { apiService, showNotification } from '@/services/apiService';
-import LoadingPopup from '../general/LoadingPopup';
+import LoadingPopup from '../../general/LoadingPopup';
 import Cookies from 'js-cookie';
 
 
