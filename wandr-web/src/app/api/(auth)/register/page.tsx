@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { registerSchema } from '@/validations/registerSchema';
 import Image from 'next/image'
 import { useForm, SubmitHandler, useFieldArray} from 'react-hook-form';
@@ -16,9 +17,8 @@ import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
 import { SHOP_CATEGORIES } from '@/constants/index';
-import { apiService, showNotification } from '@/services/apiService';
+import { showNotification } from '@/services/apiService';
 import GoogleMapsAutocomplete from '@/components/general/MapWithMarker';
-import PlaceAutocomplete from '@/components/admin/PlaceAutoComplete';
 
 
 
@@ -55,6 +55,7 @@ interface RegisterFormInputs {
 const RegisterPage: React.FC = () => {
 
     const [step, setStep] = useState(1);
+    const router = useRouter();
 
     const {
         register,
@@ -135,7 +136,7 @@ const RegisterPage: React.FC = () => {
             Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
             Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
-            window.location.href = '/api/business/dashboard';
+            router.push('/api/business/dashboard');
       
             // Handle storing tokens or redirecting to authenticated area
           } catch (error : any) {
