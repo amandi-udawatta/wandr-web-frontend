@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
 import {UserAdvertisementContent} from '@/components/business/UserAdvertisementContent'
 import BusinessSideBar from '@/components/business/UserSidebar';
+import { AdvertisementContent } from '@/components/business/advertisements/AdvertisementContent';
 
 const BusinessaAdvertisements: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const BusinessaAdvertisements: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <BusinessHeader page={'Advertisements'} />
         <div className="flex-1 overflow-y-auto">
-          <UserAdvertisementContent />
+          <AdvertisementContent />
         </div>
       </div>
     </div>

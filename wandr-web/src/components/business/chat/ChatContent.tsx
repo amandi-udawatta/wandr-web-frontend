@@ -14,7 +14,7 @@ import { useWebSocket } from "@/services/WebSocketContext";
 import { format, isSameDay } from 'date-fns';
 
 export const ChatContent = () => {
-    const [traveller, setTraveller] = useState<any[]>([]); // List of traveller
+    const [traveller, setTraveller] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>(""); // Search input value
     const [selectedTraveller, setSelectedTraveller] = useState<any | null>(null); // Selected traveller for chatting
     const [chatMessages, setChatMessages] = useState<any[]>([]); // Chat messages for the selected traveller
@@ -87,7 +87,7 @@ export const ChatContent = () => {
     };
 
     // Filter traveller based on the search term
-    const filteredTraveller = traveller.filter((traveller) =>
+    const filteredTraveller = (traveller || []).filter((traveller) =>
         traveller.name.toLowerCase().includes(searchTerm)
     );
 
@@ -134,7 +134,8 @@ export const ChatContent = () => {
                         />
                     </div>
                     <div className="overflow-auto w-full h-full px-4">
-                        {filteredTraveller.map((traveller) => (
+                        {traveller && traveller.length > 0 ? (
+                            filteredTraveller.map((traveller) => (
                             <ChatCard
                                 key={traveller.travellerId}
                                 name={traveller.name}
@@ -144,8 +145,16 @@ export const ChatContent = () => {
                                 tag={<Badge count={0} />} // Show unread messages count if available
                                 onClick={() => setSelectedTraveller(traveller)} // Select traveller on click
                             />
-                        ))}
-                    </div>
+                            ))
+                        ) : (
+                            <div className="flex items-center justify-center h-full p-5">
+                                <p className="text-gray-500 text-lg text-center">
+                                    No messages from customers. Stay alerted for your first message!
+                                </p>
+                            </div>
+                        )}
+                        </div>
+
                 </div>
             </Col>
 
