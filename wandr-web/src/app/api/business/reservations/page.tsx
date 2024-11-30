@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
 import BusinessSideBar from '@/components/business/UserSidebar';
-import ChatList from '@/components/business/ChatList';
-import ChatWindow from '@/components/business/ChatWindow';
-import ReservationsTable from '@/components/business/ReservationTable';
+import ReservationsTable from '@/components/business/reservations/ReservationTable';
 
 const BusinesChat: React.FC = () => {
   return (
