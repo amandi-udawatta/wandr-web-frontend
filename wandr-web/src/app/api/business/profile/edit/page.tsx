@@ -2,21 +2,21 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import BusinessProductsTable from '@/components/business/products/ProductTable'
 import BusinessSideBar from '@/components/business/UserSidebar';
+import ProfileEditComponent from '@/components/business/profile/ProfileEditPage';
 
-const BusinessProducts: React.FC = () => {
+const BusinessProfile: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <BusinessSideBar active={'Products'}/>
+      <BusinessSideBar active={'Profile'}/>
       <div className="flex-1 flex flex-col">
-        <BusinessHeader page={'Products'} />
+        <BusinessHeader page={'Profile'} />
         <div className="flex-1 overflow-y-auto">
-          <BusinessProductsTable />
+          <ProfileEditComponent />
         </div>
       </div>
     </div>
   )
 }
 
-export default BusinessProducts;
+export default BusinessProfile;

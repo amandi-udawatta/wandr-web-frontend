@@ -1,23 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Col, Row, Space, Input, Collapse } from "antd";
+import { Button, Col, Row, Space, Input, Collapse ,  Modal, Form, Upload } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   ShoppingOutlined,
   DollarOutlined,
   SearchOutlined,
-  DownOutlined,
-  UpOutlined,
   EyeInvisibleFilled,
   EyeOutlined,
+  UploadOutlined,
+  InboxOutlined,
 } from "@ant-design/icons";
 import StatCard from "@/components/business/dashboard/StatisticCard";
 import TableCard from "@/components/admin/TableCard";
 import Image from "next/image";
 import { apiService, showNotification } from "@/services/apiService"; // Assuming you're using apiService
 import LoadingPopup from "../../general/LoadingPopup";
+import Dragger from "antd/es/upload/Dragger";
+import { uploadToCloudinary } from "@/services/uploadImagesService";
 
 const { Panel } = Collapse;
 
@@ -26,7 +28,7 @@ interface ProductDetails {
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
+  image: string;
   quantity: number;
   reservation_payment: number;
 }
@@ -53,6 +55,10 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   const [filteredOrders, setFilteredOrders] = useState<OrderDetails[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const [productImageUrl, setproductImageUrl] = useState<string>('');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +73,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
             name: productResponse.data.name,
             price: productResponse.data.price,
             description: productResponse.data.description,
-            imageUrl: `/product${productResponse.data.product_id}.png`, // Adjust the path as needed
+            image: productResponse.data.image, // Adjust the path as needed
             quantity: productResponse.data.quantity,
             reservation_payment: productResponse.data.reservation_payment,
           };
@@ -146,9 +152,20 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
     fetchData();
   }, [productId]);
 
+  const handleShopImageUpload = async (options: any) => {
+    const { file, onSuccess, onError } = options;
+    try {
+      const uploadedUrl = await uploadToCloudinary(file); // Use the custom service
+      setproductImageUrl(uploadedUrl);
+      onSuccess("Product image uploaded successfully.");
+    } catch (error) {
+      onError("Failed to upload product image.");
+    }
+  };
+
   const handleEdit = () => {
-    console.log("Edit product", product);
-    // Implement edit logic here (e.g., navigation or modal)
+    setIsEditing(true);
+    form.setFieldsValue(product); // Pre-fill form with current product data
   };
 
   const handleDelete = async (productId: number) => {
@@ -177,6 +194,43 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
       );
     } finally {
       setIsLoading(false); // Reset loading state
+    }
+  };
+
+  const handleUpdate = async (values: Partial<ProductDetails>) => {
+    try {
+      const updatedFields: Partial<ProductDetails> = {};
+      Object.keys(values).forEach((key) => {
+        if (values[key] !== product![key as keyof ProductDetails]) {
+          updatedFields[key as keyof ProductDetails] = values[key];
+        }
+      });
+
+      updatedFields.image = productImageUrl;
+
+      if (Object.keys(updatedFields).length === 0) {
+        showNotification("info", "No Changes", "No fields were modified.");
+        return;
+      }
+
+      const response = await apiService.post(
+        `/products/update/${productId}`,
+        updatedFields
+      );
+
+      if (response.success) {
+        setProduct({ ...product!, ...updatedFields });
+        showNotification("success", "Success", "Product updated successfully");
+        setIsEditing(false);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      showNotification(
+        "error",
+        "Update Failed",
+        (error as Error).message || "Failed to update product"
+      );
     }
   };
 
@@ -342,7 +396,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
               <Row>
                 <Col style={{ width: "200px" }}>
                   <Image
-                    src={product?.imageUrl || "/default-product.png"}
+                    src={product?.image || "/default-product.png"}
                     alt={product?.name || "Product Image"}
                     width={200}
                     height={200}
@@ -391,20 +445,35 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
             >
               <Row className="m-5 justify-around" style={{ width: "100%" }}>
                 <Space className="space-x-10" style={{ width: "100%" }}>
-                  <StatCard
-                    title="Total Orders"
-                    value={`${totalOrders}`}
-                    color="bg-green-100"
-                    icon={<ShoppingOutlined style={{ fontSize: "24px" }} />}
-                    bgColor="#4feb4b"
-                  />
-                  <StatCard
-                    title="Total Revenue"
-                    value={`Rs. ${totalRevenue}`}
-                    color="bg-green-100"
-                    icon={<DollarOutlined style={{ fontSize: "24px" }} />}
-                    bgColor="#4feb4b"
-                  />
+                <StatCard
+                  title="Total Orders"
+                  value={
+                    totalOrders > 0 ? (
+                      `${totalOrders}`
+                    ) : (
+                      <span className="text-gray-500 italic text-sm">No orders yet</span>
+                    )
+                  }
+                  color="bg-green-100"
+                  icon={<ShoppingOutlined style={{ fontSize: "24px" }} />}
+                  bgColor="#4feb4b"
+                />
+
+                <StatCard
+                  title="Total Revenue"
+                  value={
+                    totalRevenue > 0 ? (
+                      `Rs. ${totalRevenue}`
+                    ) : (
+                      <span className="text-gray-500 italic text-sm">No revenue yet</span>
+                    )
+                  }
+                  color="bg-green-100"
+                  icon={<DollarOutlined style={{ fontSize: "24px" }} />}
+                  bgColor="#4feb4b"
+                />
+
+
                 </Space>
               </Row>
             </Col>
@@ -441,6 +510,48 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
         title="Fetching All Products"
         description="Please wait while we gather all the details for you. This might take a moment."
       />
+
+      <Modal
+        open={isEditing}
+        title="Edit Product"
+        onCancel={() => setIsEditing(false)}
+        onOk={() => form.submit()}
+        okText="Save"
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleUpdate}
+          initialValues={product || undefined }
+        >
+          <Form.Item name="name" label="Name">
+            <Input />
+          </Form.Item>
+          <Form.Item name="price" label="Price">
+            <Input type="number" min={0} />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea rows={3} />
+          </Form.Item>
+          <Form.Item name="quantity" label="Quantity">
+            <Input type="number" min={0} />
+          </Form.Item>
+          <Form.Item label="Profile Image">
+            <Dragger
+              customRequest={handleShopImageUpload}
+              accept=".jpg,.png,.jpeg"
+              multiple={false}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Click or drag file to upload profile image</p>
+            </Dragger>
+          </Form.Item>
+
+        </Form>
+      </Modal>
+
     </div>
   );
 };

@@ -4,7 +4,7 @@ import React from 'react';
 import BusinessHeader from '@/components/business/UserHeader';
 import BusinessSideBar from '@/components/business/UserSidebar';
 import { ChatContent } from '@/components/business/chat/ChatContent';
-import { WebSocketProvider } from '@/services/WebSocketContext';
+import { WebSocketProvider } from '@/services/WebSocketContextService';
 
 const BusinesChat: React.FC = () => {
   return (

@@ -5,7 +5,6 @@ import TableCard from '@/components/admin/TableCard';
 import Chip from '@/components/general/Chip';
 import {Row, Col, Input, Tag, Modal} from 'antd'; // Assuming this is where your BlogPost component is located
 import { Avatar, Tooltip, Space,Button, message} from 'antd';
-// import Button from '@/components/Button';
 import { FrownOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons';
 import { apiService, showNotification } from '@/services/apiService'
 import LoadingPopup from '@/components/general/LoadingPopup';
@@ -68,6 +67,7 @@ const AdvertisementsTable = () => {
       console.log(response);
       if (response.success) {
         if (response.data) {
+          console.log(response.data);
           const formattedData = response.data.map((item:any, index:any) => ({
             key: index + 1,
             number: index + 1,
@@ -214,7 +214,7 @@ const AdvertisementsTable = () => {
             < Chip
                 text={text} // Adjust this to pass the appropriate text from your data
                 size="small"
-                color={text === 'Gold' ? 'gold' : text === 'Silver' ? 'silver' : 'brown'} // Adjust this to pass the appropriate color based on the type
+                color={text == 'Premium Plan' ? 'gold' : text == 'Standard Plan' ? 'silver' : 'brown'} // Adjust this to pass the appropriate color based on the type
             />
         ), 
     },
@@ -294,7 +294,7 @@ const AdvertisementsTable = () => {
         ), 
     },
     { title: 'Posted On', dataIndex: 'postedDate', key: 'postedDate',width:'150px', sorter: (a: any, b: any) => new Date(a.requestedDate) - new Date(b.requestedDate), },
-    { title: 'Remaining Days', dataIndex: 'remainingDays', key: 'remainingDays',sorter: (a: any, b: any) => new Date(a.remainingDays) - new Date(b.remainingDays), },
+    // { title: 'Remaining Days', dataIndex: 'remainingDays', key: 'remainingDays',sorter: (a: any, b: any) => new Date(a.remainingDays) - new Date(b.remainingDays), },
     {
       title: 'Action',
       key: 'action',

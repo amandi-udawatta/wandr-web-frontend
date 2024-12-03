@@ -1,11 +1,15 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {};
-
-// export default nextConfig;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false, // Disable React Strict Mode
-  };
-  
-  export default nextConfig;
-  
+  reactStrictMode: false, // Disable React Strict Mode
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**', // Allow all paths from this domain
+      },
+    ],
+  },
+};
+
+export default nextConfig;
