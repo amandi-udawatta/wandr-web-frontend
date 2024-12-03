@@ -182,7 +182,7 @@ const ReservationsTable = () => {
             Pending Reservations
           </Button>
         </Col>
-        <Col span={4}>
+        <Col span={3}>
           <Button
             type={status === 'purchased' ? 'primary' : 'default'}
             onClick={() => setStatus('purchased')}
