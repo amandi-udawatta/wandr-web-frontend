@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
 import BusinessSideBar from '@/components/business/UserSidebar';
 import ReservationsTable from '@/components/business/reservations/ReservationTable';
+import withAuth from '@/services/authenticationService';
 
 const BusinesChat: React.FC = () => {
   return (
@@ -19,4 +20,4 @@ const BusinesChat: React.FC = () => {
   )
 }
 
-export default BusinesChat;
+export default withAuth(BusinesChat, "BUSINESS");

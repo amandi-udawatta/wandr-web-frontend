@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
 import BusinessProductsTable from '@/components/business/products/ProductTable'
 import BusinessSideBar from '@/components/business/UserSidebar';
+import withAuth from '@/services/authenticationService';
 
 const BusinessProducts: React.FC = () => {
   return (
@@ -19,4 +20,4 @@ const BusinessProducts: React.FC = () => {
   )
 }
 
-export default BusinessProducts;
+export default withAuth(BusinessProducts, "BUSINESS");

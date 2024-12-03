@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import {UserAdvertisementContent} from '@/components/business/UserAdvertisementContent'
 import BusinessSideBar from '@/components/business/UserSidebar';
 import { AdvertisementContent } from '@/components/business/advertisements/AdvertisementContent';
+import withAuth from '@/services/authenticationService';
 
 const BusinessaAdvertisements: React.FC = () => {
   return (
@@ -20,4 +20,4 @@ const BusinessaAdvertisements: React.FC = () => {
   )
 }
 
-export default BusinessaAdvertisements;
+export default withAuth(BusinessaAdvertisements, "BUSINESS");

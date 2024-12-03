@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader';
 import BusinessSideBar from '@/components/business/UserSidebar';
 import ProductDetailsCard from '@/components/business/products/ProductDetails'; // Adjust path as needed
+import withAuth from '@/services/authenticationService';
 
 const ProductPage: React.FC = () => {
   const { id } = useParams();
@@ -22,4 +23,4 @@ const ProductPage: React.FC = () => {
   );
 };
 
-export default ProductPage;
+export default withAuth(ProductPage, 'BUSINESS');

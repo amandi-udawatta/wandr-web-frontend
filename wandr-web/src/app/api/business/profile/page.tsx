@@ -6,6 +6,7 @@ import {UserBusinessProfileContent} from '@/components/business/UserBusinessProf
 import BusinessSideBar from '@/components/business/UserSidebar';
 import { UserBusinessProfileEditContent } from '@/components/business/UserBusinessProfileEditContent';
 import ProfilePageComponent from '@/components/business/profile/ProfileDetailsPage';
+import withAuth from '@/services/authenticationService';
 
 const BusinessProfile: React.FC = () => {
   return (
@@ -21,4 +22,4 @@ const BusinessProfile: React.FC = () => {
   )
 }
 
-export default BusinessProfile;
+export default withAuth(BusinessProfile, "BUSINESS");

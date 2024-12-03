@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminDashboardContent from '@/components/admin/AdminDashboardContent'
 import AdminSidebar from '@/components/admin/AdminSideBar';
+import withAuth from '@/services/authenticationService';
 
 const AdminDashboard: React.FC = () => {
   return (
@@ -19,4 +20,4 @@ const AdminDashboard: React.FC = () => {
   )
 }
 
-export default AdminDashboard;
+export default withAuth(AdminDashboard,"ADMIN");

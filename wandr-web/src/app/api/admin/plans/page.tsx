@@ -8,6 +8,7 @@ import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import LoadingPopup from '@/components/general/LoadingPopup';
 import { apiService, showNotification } from '@/services/apiService';
+import withAuth from '@/services/authenticationService';
 
 const { Option } = Select;
 
@@ -356,4 +357,4 @@ const AdminBusinessPlans: React.FC = () => {
   )
 }
 
-export default AdminBusinessPlans;
+export default withAuth(AdminBusinessPlans, "ADMIN");

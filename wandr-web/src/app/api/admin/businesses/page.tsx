@@ -3,6 +3,7 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import BusinessTable from '@/components/admin/BusinessTable';
+import withAuth from '@/services/authenticationService';
 
 const AdminPlaces: React.FC = () => {
   return (
@@ -19,4 +20,4 @@ const AdminPlaces: React.FC = () => {
   )
 }
 
-export default AdminPlaces;
+export default withAuth(AdminPlaces, "ADMIN");
