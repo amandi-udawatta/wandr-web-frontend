@@ -10,7 +10,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { apiService } from "@/services/apiService";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import { useWebSocket } from "@/services/WebSocketContext";
+import { useWebSocket } from "@/services/WebSocketContextService";
 import { format, isSameDay } from 'date-fns';
 
 export const ChatContent = () => {
