@@ -19,6 +19,7 @@ import { notification } from 'antd';
 import { SHOP_CATEGORIES } from '@/constants/index';
 import { showNotification } from '@/services/apiService';
 import GoogleMapsAutocomplete from '@/components/general/MapWithMarker';
+import { uploadToCloudinary } from '@/services/uploadImagesService';
 
 
 
@@ -83,13 +84,25 @@ const RegisterPage: React.FC = () => {
         const languageStings = data.businessLanguages.map(languageObj => languageObj);
         console.log(serviceStrings);
 
+        if (!file) {
+          showNotification('error', 'Operation Status', 'Please upload an image.');
+          return;
+        }
+    
+        // Use the existing function to upload the image
+        const imageUrl = await uploadToCloudinary(file);
+        if (!imageUrl) {
+          showNotification('error', 'Operation Status', 'Failed to upload the image. Try again.');
+          return;
+        }
+
         const formData = new FormData();
         formData.append('name', data.businessName);
         formData.append('email', data.ownerEmail);
         formData.append('businessContact', data.businessContact);
         formData.append('description', data.businessDescription);
-        if (file) {
-            formData.append('shopImage', file);
+        if (imageUrl) {
+            formData.append('shopImage', imageUrl);
         }
         formData.append('ownerName', data.ownerName);
         formData.append('ownerContact', data.ownerContact);
