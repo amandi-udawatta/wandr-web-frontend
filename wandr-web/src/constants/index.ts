@@ -8,6 +8,7 @@ import {
   SettingOutlined,
   LogoutOutlined,
   WechatWorkOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
 
 export const NAV_LINKS = [
@@ -34,6 +35,7 @@ export const NAV_LINKS = [
     { href: '/api/business/dashboard', key: 'dashboard', label: 'Dashboard', icon: PieChartOutlined  },
     { href: '/api/business/chat', key: 'chat', label: 'Chat', icon: WechatWorkOutlined },
     { href: '/api/business/products', key: 'products', label: 'Products', icon: ShopOutlined },
+    { href: '/api/business/reservations', key: 'reservations', label: 'Reservations', icon: ShoppingOutlined },
     { href: '/api/business/advertisements', key: 'advertisements', label: 'Advertisements', icon: FundOutlined  },
     { href: '/api/business/profile', key: 'profile', label: 'Profile', icon: SafetyCertificateOutlined },
     // { href: '/api/admin/settings', key: 'settings', label: 'Settings', icon: SettingOutlined },

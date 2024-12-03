@@ -5,8 +5,7 @@ import { LoadScript, Autocomplete } from '@react-google-maps/api';
 import { Input } from 'antd';
 import { Library } from '@googlemaps/js-api-loader';
 
-const libraries: Library[] = ['places'];
-const apiKey = 'AIzaSyCc0kuXm4K-GyRHuXAbp7WDO5-kqmwt4Fg'; // Replace with your API key
+const libraries: Library[] = ['places'];// Replace with your API key
 
 interface PlaceAutocompleteProps {
   onPlaceSelect: (place: any) => void;
@@ -51,7 +50,7 @@ const PlaceAutocomplete: React.FC<PlaceAutocompleteProps> = ({ onPlaceSelect, op
   };
 
   return (
-    <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} libraries={libraries}>
       <Autocomplete
         onLoad={onLoad}
         onPlaceChanged={onPlaceChanged}

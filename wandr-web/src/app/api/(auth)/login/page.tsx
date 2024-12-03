@@ -3,6 +3,7 @@
 import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/general/Button';
 import Navbar from '@/components/general/Navbar';
@@ -22,6 +23,8 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC = () => {
+
+  const router = useRouter();
 
   const {
     register,
@@ -67,7 +70,7 @@ const LoginPage: React.FC = () => {
       Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
       Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
-      window.location.href = '/api/business/dashboard';
+      router.push('/api/business/dashboard');
 
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {

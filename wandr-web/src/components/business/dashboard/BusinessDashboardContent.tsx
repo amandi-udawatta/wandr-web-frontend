@@ -4,8 +4,8 @@ import { ShoppingOutlined, DollarOutlined, SmileOutlined, FrownOutlined, Calenda
 import StatisticCard from '@/components/admin/StatisticBar';
 import PieChart from '@/components/charts/countryPieChart';
 import BarChart from '@/components/charts/revenueBarChart';
-import AdvertisementCarousel from './BusinessAdCarousel';
-import TableCard from '../admin/TableCard';
+import AdvertisementCarousel from '../advertisements/AdCarousel';
+import TableCard from '@/components/admin/TableCard';
 
 const initialStatistics = [
   { title: 'Products Reserved', value: 125, color: 'bg-blue-100', icon: <ShoppingOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3c70d8' },

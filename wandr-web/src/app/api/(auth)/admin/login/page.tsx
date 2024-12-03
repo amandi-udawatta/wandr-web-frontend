@@ -8,10 +8,9 @@ import Navbar from '@/components/general/Navbar';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/validations/loginSchema';
-import { notification } from 'antd';
-import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
-import { apiService, showNotification } from '@/services/apiService';
+import {showNotification } from '@/services/apiService';
+import {useRouter} from 'next/navigation';
 
 interface LoginFormInputs {
   email: string;
@@ -19,6 +18,7 @@ interface LoginFormInputs {
 }
 
 const AdminLoginPage: React.FC = () => {
+  const router = useRouter();
   // Initialize useForm with validation schema
   const {
     register,
@@ -67,7 +67,7 @@ const AdminLoginPage: React.FC = () => {
       Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
       Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
-      window.location.href = '/api/admin/dashboard';
+      router.push('/api/admin/dashboard');
 
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {

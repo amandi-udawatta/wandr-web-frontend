@@ -2,21 +2,21 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import BusinessDashboardContent from '@/components/business/dashboard/BusinessDashboardContent'
 import BusinessSideBar from '@/components/business/UserSidebar';
+import ReservationsTable from '@/components/business/reservations/ReservationTable';
 
-const BusinessDashboard: React.FC = () => {
+const BusinesChat: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <BusinessSideBar active={'Dashboard'}/>
+      <BusinessSideBar active={'Reservations'}/>
       <div className="flex-1 flex flex-col">
-        <BusinessHeader page={'Dashboard'} />
+        <BusinessHeader page={'Reservations'} />
         <div className="flex-1 overflow-y-auto">
-          <BusinessDashboardContent />
+          <ReservationsTable/>
         </div>
       </div>
     </div>
   )
 }
 
-export default BusinessDashboard;
+export default BusinesChat;
