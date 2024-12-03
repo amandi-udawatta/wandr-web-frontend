@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import BusinessHeader from '@/components/business/UserHeader'
-import {UserBusinessProfileContent} from '@/components/business/UserBusinessProfileContent'
 import BusinessSideBar from '@/components/business/UserSidebar';
-import { UserBusinessProfileEditContent } from '@/components/business/UserBusinessProfileEditContent';
-import ProfilePageComponent from '@/components/business/profile/ProfileDetailsPage';
+import ProfileEditComponent from '@/components/business/profile/ProfileEditPage';
 
 const BusinessProfile: React.FC = () => {
   return (
@@ -14,7 +12,7 @@ const BusinessProfile: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <BusinessHeader page={'Profile'} />
         <div className="flex-1 overflow-y-auto">
-          <ProfilePageComponent />
+          <ProfileEditComponent />
         </div>
       </div>
     </div>
