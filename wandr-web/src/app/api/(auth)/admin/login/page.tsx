@@ -11,6 +11,7 @@ import { loginSchema } from '@/validations/loginSchema';
 import Cookies from 'js-cookie';
 import {showNotification } from '@/services/apiService';
 import {useRouter} from 'next/navigation';
+import withAuth from '@/services/authenticationService';
 
 interface LoginFormInputs {
   email: string;

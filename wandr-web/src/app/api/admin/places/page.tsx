@@ -3,6 +3,7 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import PlacesTable from '@/components/admin/PlacesTable';
+import withAuth from '@/services/authenticationService';
 import Cookies from 'js-cookie';
 
 
@@ -21,4 +22,4 @@ const AdminPlaces: React.FC = () => {
   )
 }
 
-export default AdminPlaces;
+export default withAuth(AdminPlaces, "ADMIN");

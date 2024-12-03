@@ -3,6 +3,7 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSideBar';
 import AdvertisementTable from '@/components/admin/AdvertisementsTable';
+import withAuth from '@/services/authenticationService';
 
 
 const AdminAdvertisements: React.FC = () => {
@@ -19,4 +20,4 @@ const AdminAdvertisements: React.FC = () => {
   )
 }
 
-export default AdminAdvertisements;
+export default withAuth(AdminAdvertisements,"ADMIN");

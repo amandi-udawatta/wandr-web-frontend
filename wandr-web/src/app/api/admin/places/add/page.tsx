@@ -17,6 +17,7 @@ import Button from '@/components/general/Button';
 import LoadingPopup from '@/components/general/LoadingPopup';
 
 import { apiService, showNotification } from '@/services/apiService';
+import withAuth from '@/services/authenticationService';
 
 
 const libraries: ('places')[] = ['places'];
@@ -351,4 +352,4 @@ const PlacesPage = () => {
   );
 };
 
-export default PlacesPage;
+export default withAuth(PlacesPage,"ADMIN");

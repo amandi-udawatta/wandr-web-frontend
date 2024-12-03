@@ -1,69 +1,70 @@
-'use client';
-
-import React from 'react'
-import { BulbTwoTone, CrownTwoTone, DeleteOutlined, EditOutlined, EllipsisOutlined, FireTwoTone, HeartTwoTone, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card } from 'antd';
+import React from 'react';
+import { BulbTwoTone, FireTwoTone, CrownTwoTone, HeartTwoTone, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Tag } from 'antd';
 
 const { Meta } = Card;
 
 interface BusinessCardProps {
-  title: string
-  description: string
-  features: string[]
-  price: number
-  onEdit?: () => void
-  onDelete?: () => void
+  title: string;
+  description: string;
+  features: string[];
+  price: number;
+  disabled?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  extra?: React.ReactNode;  // Add the extra prop to allow custom content
 }
 
 const getIconByTitle = (title: string): React.ReactNode => {
-    switch (title) {
-      case 'Basic Plan':
-        return <BulbTwoTone style={{ fontSize: '52px' }} twoToneColor="#cd7f32" />;
-      case 'Standard Plan':
-        return <FireTwoTone style={{ fontSize: '52px' }} twoToneColor="#C0C0C0" />;
-      case 'Premium Plan':
-        return <CrownTwoTone style={{ fontSize: '52px' }} twoToneColor="#FFD700" />;
-      default:
-        return <HeartTwoTone style={{ fontSize: '52px' }} twoToneColor="#cd7f32" />;
-    }
-  };
+  switch (title) {
+    case 'Basic Plan':
+      return <BulbTwoTone style={{ fontSize: '52px' }} twoToneColor="#cd7f32" />;
+    case 'Standard Plan':
+      return <FireTwoTone style={{ fontSize: '52px' }} twoToneColor="#C0C0C0" />;
+    case 'Premium Plan':
+      return <CrownTwoTone style={{ fontSize: '52px' }} twoToneColor="#FFD700" />;
+    default:
+      return <HeartTwoTone style={{ fontSize: '52px' }} twoToneColor="#cd7f32" />;
+  }
+};
 
-const BusinessPlanCard: React.FC<BusinessCardProps> = ({title, description, features, price, onEdit, onDelete }) => {
+const BusinessPlanCard: React.FC<BusinessCardProps> = ({
+  title,
+  description,
+  features,
+  price,
+  onEdit,
+  onDelete,
+  disabled,
+  extra, // Destructure extra prop
+}) => {
   return (
-    <Card className="max-w-96 min-w-72 mx-auto p-4 border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-green-35 hover:shadow-2xl transition-all duration-500 ease-in-out">
-        <div className="flex justify-between items-start">
-            <div className=" w-full">
-                <h2 className="text-xl font-bold">{title}</h2>
-                <p className="text-gray-500">{description}</p>
-            </div>
-            <div className="flex gap-2">
-            {onEdit && <Button 
-                type="text" 
-                icon={<EditOutlined />} 
-                onClick={onEdit} 
-                className="text-black"
-            />}
-            {onDelete && <Button 
-                type="text" 
-                icon={<DeleteOutlined />} 
-                onClick={onDelete} 
-                className="text-red-600"
-            />}
-            </div>
+    <Card className={`mx-auto p-4 border border-gray-200 rounded-lg shadow-md ${disabled ? 'opacity-50' : ''}`} extra={extra}>
+      <div className="flex justify-between items-start">
+        <div className="w-full">
+          <h2 className="text-xl font-bold">{title}</h2>
+          <p className="text-gray-500">{description}</p>
         </div>
-        <div className="mt-4">
-            <div className='w-full h-32 justify-center align-middle flex '>
-                {getIconByTitle(title)}
-            </div>
-            <ul className="list-disc list-inside text-left mt-4">
-            {features.map((feature, index) => (
-                <li key={index}>{feature}</li>
-            ))}
-            </ul>
-            <p className="text-2xl font-bold mt-5">Rs. {price}.00</p>
+        <div className="flex gap-2">
+          {onEdit && (
+            <Button type="text" icon={<EditOutlined />} onClick={onEdit} className="text-black" />
+          )}
+          {onDelete && (
+            <Button type="text" icon={<DeleteOutlined />} onClick={onDelete} className="text-red-600" />
+          )}
         </div>
+      </div>
+      <div className="mt-4">
+        <div className="w-full h-32 justify-center align-middle flex ">{getIconByTitle(title)}</div>
+        <ul className="list-disc list-inside text-left mt-4">
+          {features.map((feature, index) => (
+            <li key={index}>{feature}</li>
+          ))}
+        </ul>
+        <p className="text-2xl font-bold mt-5">Rs. {price}.00</p>
+      </div>
     </Card>
-  )
-}
+  );
+};
 
 export default BusinessPlanCard;

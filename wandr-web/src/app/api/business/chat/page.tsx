@@ -5,6 +5,7 @@ import BusinessHeader from '@/components/business/UserHeader';
 import BusinessSideBar from '@/components/business/UserSidebar';
 import { ChatContent } from '@/components/business/chat/ChatContent';
 import { WebSocketProvider } from '@/services/WebSocketContextService';
+import withAuth from '@/services/authenticationService';
 
 const BusinesChat: React.FC = () => {
   return (
@@ -24,4 +25,4 @@ const BusinesChat: React.FC = () => {
   );
 };
 
-export default BusinesChat;
+export default withAuth(BusinesChat, 'BUSINESS');
