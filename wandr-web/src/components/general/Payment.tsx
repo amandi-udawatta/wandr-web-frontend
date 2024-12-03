@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { Modal, Button, Col, Row, Tag } from 'antd';
+import { Modal, Button, Col, Row, Tag, message } from 'antd';
 import BusinessPlanCard from '../admin/BusinessPlanCard';
-import { apiService, showNotification } from '@/services/apiService';
-import { getPlanIdFromToken } from '@/services/tokenDecodeService';
+import { apiService, showCentralAlert, showNotification } from '@/services/apiService';
+import { getIdFromToken, getPlanIdFromToken } from '@/services/tokenDecodeService';
+import { useRouter } from 'next/navigation';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -13,6 +14,7 @@ const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: (
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPaymentIntent = async () => {
@@ -31,17 +33,50 @@ const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: (
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!stripe || !elements) return;
-
+  
     const cardElement = elements.getElement(CardElement);
     if (cardElement) {
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret!, {
         payment_method: { card: cardElement },
       });
-      if (error) setErrorMessage(error.message || 'Payment failed.');
-      else {
+  
+      if (error) {
+        setErrorMessage(error.message || 'Payment failed.');
+      } else if (paymentIntent) {
         console.log('Payment succeeded:', paymentIntent);
-        showNotification('success', 'Payment Successful', 'Payment has been successfully processed.');
         onClose();
+  
+        // Prepare data to send to the backend
+        const refId = paymentIntent.id;
+        const userId = getIdFromToken(); // Get userId from token
+        const selectedPlanId = 1; // Replace with actual selected plan ID
+        const payload = {
+          refId,
+          type: 'PLAN',
+          userId,
+          role: 'BUSINESS',
+          amount: paymentIntent.amount, // Convert amount from cents to dollars
+          paymentStatus: 'PAID',
+          planId: selectedPlanId,
+        };
+
+        console.log("payload:", payload);
+
+        try {
+          const response = await apiService.post('/stripe/save-payment', payload);
+          console.log(response, "response");
+          if(response.success){
+            showNotification('success', 'Payment Successful', 'Payment has been successfully processed.');
+            showCentralAlert('Congratulations! Plan purchased!', 'Please sign in again to activate the plan', 'success');
+            router.push('/api/login');
+          }
+          else{
+            showNotification('error', 'Payment Unsucessful', 'Error saving payment to the server.');
+          }
+        } catch (backendError) {
+          console.error('Error saving payment:', backendError);
+          showNotification('error', 'Payment Unsucessful', 'Error saving payment to the server.');
+        }
       }
     }
   };
