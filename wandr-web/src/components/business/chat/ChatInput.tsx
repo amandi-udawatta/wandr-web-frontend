@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "antd";
 import { FaPaperclip, FaSmile } from "react-icons/fa";
 import { CiCamera } from "react-icons/ci";
-import { useWebSocket } from "@/services/WebSocketContext";
+import { useWebSocket } from "@/services/WebSocketContextService";
 import {SendOutlined } from '@ant-design/icons';
 
 const ChatInput = ({ senderId, receiverId, onSend }: { senderId: number; receiverId: number; onSend: (message: string) => void }) => {

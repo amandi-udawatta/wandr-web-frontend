@@ -2,6 +2,10 @@ import React from 'react';
 import Image from "next/image";
 import Link from 'next/link';
 import {SIDEBAR_ITEMS, BUSINESS_SIDEBAR_ITEMS} from '@/constants';
+import { LogoutOutlined } from '@ant-design/icons';
+import {jwtDecode} from 'jwt-decode';// make sure this points to your API service setup
+import Cookies from 'js-cookie'; // install js-cookie with npm install js-cookie
+import { useRouter } from 'next/navigation';
 
 
 interface UserSidebarProps{
@@ -9,6 +13,39 @@ interface UserSidebarProps{
 }
 
 const UserSidebar: React.FC<UserSidebarProps> = ({active}) => {
+  const router = useRouter();
+  const logout = async () => {
+
+    try {
+      const token = Cookies.get('accessToken');
+  
+      if (!token) {
+        console.log('No access token found');
+        return;
+      }
+  
+      const decodedToken = jwtDecode(token);
+      const { id, role } = decodedToken as { id: string, role: string };
+  
+      console.log(decodedToken);
+      console.log(id);
+      console.log(role);
+  
+      // const response = await apiService.post('/logout', {
+      //   id, role
+      // });
+  
+      // if (response.ok) {
+        Cookies.remove('accessToken');
+        router.push('/api/login')
+      // } else {
+      //   console.log('Failed to sign out');
+      // }
+    } catch (error) {
+      console.error('An error occurred during logout:', error);
+    }
+  };
+
   return (
     <aside className="h-full bg-white shadow-md">
       <div className='flex justify-center align-middle mt-5 mb-10'>
@@ -23,6 +60,11 @@ const UserSidebar: React.FC<UserSidebarProps> = ({active}) => {
                   {link.label}
               </Link>
           ))}
+          <div onClick={logout}
+            className={` custom-list-item  ${active === 'Sign Out'? 'bg-green-50 text-white border rounded-xl' : ''}`}>
+                <LogoutOutlined />
+                Sign Out
+          </div>
         </ul>
       </nav>
     </aside>
