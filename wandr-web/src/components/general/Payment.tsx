@@ -1,90 +1,148 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "antd";
-import Script from "next/script";
+import React, { useEffect, useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Modal, Button, Col, Row, Tag } from 'antd';
+import BusinessPlanCard from '../admin/BusinessPlanCard';
+import { apiService, showNotification } from '@/services/apiService';
+import { getPlanIdFromToken } from '@/services/tokenDecodeService';
 
-// Declare the window object with payhere to avoid TypeScript errors
-declare global {
-  interface Window {
-    payhere: any;
-  }
-}
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-interface PayHerePaymentProps {
-  amount: number;
-  orderId: string;
-  customerName: string;
-  email: string;
-  phone: string;
-}
-
-const PayHerePayment = ({
-  amount,
-  orderId,
-  customerName,
-  email,
-  phone,
-}: PayHerePaymentProps) => {
-  const [payhereLoaded, setPayhereLoaded] = useState(false);
+const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: () => void }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (window.payhere) {
-      setPayhereLoaded(true); // Mark PayHere as loaded once window.payhere is available
-    }
-  }, []);
-
-  const handlePayment = () => {
-    if (payhereLoaded) {
-      const payment = {
-        sandbox: true,
-        merchant_id: "1228916", // Replace with your actual Merchant ID
-        return_url: "http://localhost:3000/success", // Modify as needed
-        cancel_url: "http://localhost:3000/cancel",
-        notify_url: "http://localhost:8080/api/payments/notify", // Backend notify URL
-
-        order_id: orderId,
-        items: "Order Payment",
-        amount: amount,
-        currency: "LKR",
-        first_name: customerName.split(" ")[0],
-        last_name: customerName.split(" ")[1] || "",
-        email: email,
-        phone: phone,
-      };
-
-      // Initiate the payment
-      if (window.payhere) {
-        window.payhere.startPayment(payment);
-      } else {
-        console.error("PayHere script is not loaded.");
+    const fetchPaymentIntent = async () => {
+      try {
+        const response = await apiService.post('/api/create-payment-intent', { amount: selectedPlan.price });
+        setClientSecret(response.data.clientSecret);
+      } catch (error) {
+        setErrorMessage('Failed to initialize payment.');
       }
-    } else {
-      console.error("PayHere script is not ready yet.");
+    };
+    if (selectedPlan) fetchPaymentIntent();
+  }, [selectedPlan]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+
+    const cardElement = elements.getElement(CardElement);
+    if (cardElement) {
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret!, {
+        payment_method: { card: cardElement },
+      });
+      if (error) setErrorMessage(error.message || 'Payment failed.');
+      else {
+        console.log('Payment succeeded:', paymentIntent);
+        onClose();
+      }
     }
   };
 
   return (
-    <div>
-      {/* Load the PayHere script dynamically */}
-      <Script
-        strategy="afterInteractive"
-        src="https://www.payhere.lk/lib/payhere.js"
-        onLoad={() => {
-          console.log("PayHere script loaded successfully.");
-          setPayhereLoaded(true); // Update state when the script is fully loaded
-        }}
-        onError={(e) => {
-          console.error("Error loading PayHere script:", e);
-        }}
-      />
-      {payhereLoaded ? (
-        <Button type="primary" onClick={handlePayment}>
-          Pay Now
+    <Modal open={true} onCancel={onClose} footer={null}>
+      <h2 className="text-xl font-bold mb-4">Complete Payment for {selectedPlan.name}</h2>
+      <form onSubmit={handleSubmit}>
+        <CardElement className="border p-2 rounded mb-4" />
+        <Button type="primary" htmlType="submit" disabled={!stripe}>
+          Pay ${selectedPlan.price}
         </Button>
-      ) : (
-        <div>Loading payment system...</div> // Show loading message until script is ready
+      </form>
+      {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+    </Modal>
+  );
+};
+
+const StripePayment = () => {
+  const [plans, setPlans] = useState([]);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [userPlanId, setUserPlanId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+
+  useEffect(() => {
+    
+    const plan = getPlanIdFromToken()
+    setUserPlanId(plan || 0);
+    console.log(plan, "planId");
+
+    const fetchBusinessPlans = async () => {
+      setIsLoading(true);
+      try {
+        const response = await apiService.get('/business-plans');
+        if (response.success) {
+          const formattedData = response.data.map((item: any, index: any) => ({
+            key: index + 1,
+            id: item.planId,
+            name: item.name,
+            description: item.description,
+            features: item.features,
+            price: item.price,
+          }));
+          setPlans(formattedData);
+        } else {
+          throw new Error(response.message || 'Failed to fetch plans');
+        }
+      } catch (error) {
+        showNotification('error', 'Error Fetching Plans', (error as Error).message );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBusinessPlans();
+  }, []);
+
+  const handlePlanSelection = (plan: any) => {
+    Modal.confirm({
+      title: `Confirm Purchase of ${plan.name}`,
+      content: `Are you sure you want to purchase the ${plan.name} plan for $${plan.price}?`,
+      onOk: () => {
+        setShowPaymentPopup(true);
+        setSelectedPlan(plan);
+      },
+    });
+  };
+
+  return (
+    <div className="p-6 rounded-lg mx-5">
+      <Row>
+        <h1 className="text-2xl font-bold">Choose a plan to start with</h1>
+      </Row>
+      <Row gutter={[16, 16]}>
+        {plans.map((plan: any) => (
+          <Col key={plan.id} span={8}>
+            <BusinessPlanCard
+              title={plan.name}
+              description={plan.description}
+              features={plan.features}
+              price={plan.price}
+              disabled={userPlanId === plan.id}
+              extra={
+                userPlanId === plan.id ? (
+                  <Tag color="green">Already Purchased</Tag>
+                ) : (
+                  <Button type="primary" onClick={() => handlePlanSelection(plan)}>
+                    Select Plan
+                  </Button>
+                )
+              }
+            />
+          </Col>
+        ))}
+      </Row>
+
+      {showPaymentPopup && selectedPlan && (
+        <Elements stripe={stripePromise}>
+          <CheckoutForm selectedPlan={selectedPlan} onClose={() => setShowPaymentPopup(false)} />
+        </Elements>
       )}
     </div>
   );
 };
 
-export default PayHerePayment;
+export default StripePayment;
