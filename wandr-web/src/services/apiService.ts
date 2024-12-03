@@ -3,6 +3,7 @@
 // services/apiService.ts
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
+import { Modal } from 'antd';
 
 const API_BASE_URL_BACKEND = 'http://localhost:8080/api';
 const API_BASE_URL_BFF = 'http://localhost:8081/api/proxy/forward'
@@ -75,9 +76,25 @@ export const showNotification = (
   message: string,
   description?: string
 ) => {
+  // console.log('showNotification');
   notification[type]({
     message,
     description,
+  });
+};
+
+
+export const showCentralAlert = (
+  title: string,
+  content: string,
+  type: 'success' | 'error' | 'info' | 'warning' = 'info'
+) => {
+  Modal[type]({
+    title,
+    content,
+    centered: true,
+    okText: 'OK',
+    onOk: () => console.log('Confirmed'), // Customize the behavior if needed
   });
 };
 
