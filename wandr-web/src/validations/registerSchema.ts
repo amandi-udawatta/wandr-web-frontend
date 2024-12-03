@@ -40,7 +40,7 @@ export const registerSchema = yup.object().shape({
 
   businessCategory: yup.string().required('Business Category is required'),
 
-  shopCategory: yup.string().required('Shop Category is required'),
+  // shopCategory: yup.string().required('Shop Category is required'),
 
   
   businessServices: yup
