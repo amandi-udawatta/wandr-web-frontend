@@ -5,11 +5,11 @@ interface AdCardProps {
   title: string;
   description: string;
   status: string;
-  postedDate: string;
-  imageUrl: string;
+  adStartDate: string;
+  image: string;
 }
 
-export const AdCard: React.FC<AdCardProps> = ({ title, description, status, postedDate, imageUrl }) => {
+export const AdCard: React.FC<AdCardProps> = ({ title, description, status, adStartDate, image }) => {
   const statusColor = status === 'Ongoing' ? 'green' : status === 'Requested' ? 'orange' : 'gray';
 
   return (
@@ -26,7 +26,7 @@ export const AdCard: React.FC<AdCardProps> = ({ title, description, status, post
         {/* Image Section */}
         <Col span={8}>
           <img
-            src={imageUrl}
+            src={image}
             alt={title}
             style={{
               width: '100%',
@@ -56,7 +56,7 @@ export const AdCard: React.FC<AdCardProps> = ({ title, description, status, post
             {/* Posted Date */}
             <div style={{ textAlign: 'left', marginTop: '8px' }}>
               <Typography.Text type="secondary">
-                <strong>Posted Date:</strong> {postedDate}
+                <strong>Posted Date:</strong> {adStartDate}
               </Typography.Text>
             </div>
           </Space>

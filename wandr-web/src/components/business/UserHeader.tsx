@@ -16,8 +16,8 @@ const UserHeader: React.FC<UserHeaderProps> = ({page}) => {
       <h1 className="text-3xl font-bold mb-3 mt-3 my-text text-green-50 ml-5">{page}</h1>
       <div className="flex items-center space-x-4">
           <div className="text-xl font-semibold">Welcome Back!</div>
-          <Input placeholder="Search here..." prefix={<SearchOutlined style={{color:'#609734'}}/>} className="w-96 search-bar  border-none bg-gray-100" />
-          <BellOutlined style={{ fontSize: '24px', color:'#EB5757'}} />
+          {/* <Input placeholder="Search here..." prefix={<SearchOutlined style={{color:'#609734'}}/>} className="w-96 search-bar  border-none bg-gray-100" /> */}
+          {/* <BellOutlined style={{ fontSize: '24px', color:'#EB5757'}} /> */}
           <Avatar style={{backgroundColor:'#609734'}} src={'/person-1.png'} className="h-5/6" size="large"/>
           {/* <Dropdown menu={{ items }}>
               <a   onClick={(e) => e.preventDefault()}>

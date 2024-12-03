@@ -3,7 +3,7 @@ import { Avatar, Button, Space, Table, Tooltip, Modal, Form, Input, Upload, mess
 import { ExclamationCircleOutlined, InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import TableCard from '../../admin/TableCard';
 import { useRouter } from 'next/navigation';
-import { apiService, showNotification } from '@/services/apiService';
+import { apiService, showCentralAlert, showNotification } from '@/services/apiService';
 import LoadingPopup from '../../general/LoadingPopup';
 import { getIdFromToken } from '@/services/tokenDecodeService';
 import { uploadToCloudinary } from '@/services/uploadImagesService';
@@ -79,10 +79,22 @@ const ProductsTable: React.FC = () => {
         setIsModalVisible(false);
         form.resetFields();
       } else {
-        throw new Error(response.message || 'Failed to add product');
+        if(response.data === "LIMIT_EXCEEDED"){
+          showCentralAlert(
+            'Failed to add product',
+            response.message,
+            'error'
+          );
+          setIsModalVisible(false);
+        }
+        else{
+          setIsModalVisible(false);
+          throw new Error(response.message || 'Failed to add product');
+        }
       }
     } catch (error) {
       showNotification('error', 'Error', (error as any).message || 'Error adding product');
+      setIsModalVisible(false);
     }
   };
 

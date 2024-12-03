@@ -1,45 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Input, Row, Col, Form, message, Select, Upload } from 'antd';
 import { AdCard } from './AdCard';
 import AdvertisementCarousel from '@/components/business/advertisements/AdCarousel';
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import { getIdFromToken } from '@/services/tokenDecodeService'; // Import your token service
 import { uploadToCloudinary } from '@/services/uploadImagesService'; // Import your image upload service
-import { apiService, showNotification } from '@/services/apiService';
+import { apiService, showCentralAlert, showNotification } from '@/services/apiService';
 
 const { Option } = Select;
 
-const dummyAds = [
-  {
-    title: 'Ad 1',
-    description: 'Special Holiday Sale with up to 50% off!',
-    status: 'Ongoing',
-    postedDate: '2024-11-25',
-    imageUrl: 'https://res.cloudinary.com/djmcupdjl/image/upload/v1733065196/jpla57elcxamqxv3fxfm.jpg',
-    remainingDays: 10,
-  },
-  {
-    title: 'Ad 2',
-    description: 'Requesting approval for the upcoming Winter Special campaign.',
-    status: 'Requested',
-    postedDate: '2024-11-20',
-    imageUrl: '/advertisement2.jpeg',
-    remainingDays: 5,
-  },
-  {
-    title: 'Ad 3',
-    description: 'Our New Year Discount event successfully concluded.',
-    status: 'Completed',
-    postedDate: '2024-11-15',
-    imageUrl: '/advertisement3.jpg',
-    remainingDays: 0,
-  },
-];
+interface Advertisement {
+  adId: string;
+  title: string;
+  description: string;
+  image: string;
+  status: string;
+  adStartDate: string; // Add postedDate property
+  remainingDays: number; // Add remainingDays property
+}
 
 export const AdvertisementContent: React.FC = () => {
   const [formDisabled, setFormDisabled] = useState(true);
   const [form] = Form.useForm();
-  const [filteredAds, setFilteredAds] = useState(dummyAds);
+  const [ads, setAds] = useState<Advertisement[]>([]);
+  const [filteredAds, setFilteredAds] = useState<Advertisement[]>([]);
+
+  useEffect(() => {
+    const fetchAdvertisements = async () => {
+      try {
+        const businessId = getIdFromToken();
+        if (!businessId) {
+          message.error('Failed to retrieve business ID. Please log in again.');
+          return;
+        }
+        const response = await apiService.get(`/ads/business/${businessId}`);
+        if (response.success) {
+          setAds(response.data);
+          setFilteredAds(response.data);
+        } else {
+          message.error('Failed to retrieve advertisements.');
+        }
+      } catch (error) {
+        console.error('Error fetching advertisements:', error);
+        message.error('Error fetching advertisements.');
+      }
+    };
+
+    fetchAdvertisements();
+  }, []);
+
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust locale as needed
+  };
 
   const handleToggleForm = () => {
     setFormDisabled((prev) => !prev);
@@ -55,20 +68,20 @@ export const AdvertisementContent: React.FC = () => {
     try {
       const businessId = getIdFromToken(); // Get business ID from token
       if (!businessId) {
-        showNotification('error', 'Operation Status', 'Failed to retrieve business ID. Please log in again.');
+        message.error('Failed to retrieve business ID. Please log in again.');
         return;
       }
   
       const file = values.image?.[0]?.originFileObj;
       if (!file) {
-        showNotification('error', 'Operation Status', 'Please upload an image.');
+        message.error('Please upload an image.');
         return;
       }
   
       // Use the existing function to upload the image
       const imageUrl = await uploadToCloudinary(file);
       if (!imageUrl) {
-        showNotification('error', 'Operation Status', 'Failed to upload the image. Try again.');
+        message.error('Failed to upload image.');
         return;
       }
   
@@ -87,23 +100,33 @@ export const AdvertisementContent: React.FC = () => {
         showNotification('success', 'Operation Status', 'Advertisement added successfully!');
         handleCancel(); // Reset the form after success
       } else {
-        showNotification('error', 'Operation Status', response.message || 'Failed to add the advertisement');
+        if(response.data === "LIMIT_EXCEEDED"){
+          showCentralAlert(
+            'Failed to add an advertisement',
+            response.message,
+            'error'
+          );
+          handleCancel(); // Reset the form after failed attempt
+        }else{
+          showNotification('error', 'Operation Status', response.message || 'Failed to add the advertisement');
+          handleCancel();
+        }
       }
     } catch (error) {
       console.error('Error creating advertisement:', error);
       showNotification('error', 'Operation Status', 'Error creating advertisement. Please try again.');
+      handleCancel();
     }
   };
 
   const handleFilterChange = (value: string) => {
-    setFilteredAds(value ? dummyAds.filter((ad) => ad.status === value) : dummyAds);
+    setFilteredAds(value ? ads.filter((ad) => ad.status === value) : ads);
   };
-
   return (
     <div style={{ padding: '24px' }}>
       <Row gutter={16} className="justify-around">
         <Col span={8}>
-          <AdvertisementCarousel advertisements={dummyAds.map(ad => ({ ...ad, image: ad.imageUrl }))} />
+          <AdvertisementCarousel advertisements={ads.map(ad => ({ ...ad, remainingDays: ad.remainingDays, image: ad.image, postedDate: formatDate(Number(ad.adStartDate))}))} />
         </Col>
         <Col span={15}>
           <div className="border border-gray-200 rounded-xl p-5">
@@ -196,16 +219,25 @@ export const AdvertisementContent: React.FC = () => {
               allowClear
               style={{ width: '200px', marginBottom: '16px' }}
             >
-              <Option value="Ongoing">Ongoing</Option>
-              <Option value="Requested">Requested</Option>
-              <Option value="Completed">Completed</Option>
+              <Option value="approved">Approved</Option>
+              <Option value="pending">Pending</Option>
             </Select>
           </Col>
         </Row>
         <Row gutter={16}>
+          {filteredAds.length === 0 && (
+            <div className="text-center py-5">No advertisements found.</div>
+          )}
           {filteredAds.map((ad, index) => (
             <Col span={8} key={index}>
-              <AdCard {...ad} />
+              <AdCard
+                key={ad.adId}
+                title={ad.title}
+                description={ad.description}
+                status={ad.status}
+                adStartDate={ad.adStartDate ? formatDate(Number(ad.adStartDate)) : 'N/A'}
+                image={ad.image}
+              />
             </Col>
           ))}
         </Row>
