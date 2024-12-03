@@ -17,7 +17,9 @@ const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: (
   useEffect(() => {
     const fetchPaymentIntent = async () => {
       try {
-        const response = await apiService.post('/api/create-payment-intent', { amount: selectedPlan.price });
+        const response = await apiService.post('/stripe/create-payment-intent', { amount: selectedPlan.price });
+        console.log(response, "response");
+        console.log(response.data.clientSecret, "clientSecret");
         setClientSecret(response.data.clientSecret);
       } catch (error) {
         setErrorMessage('Failed to initialize payment.');
@@ -38,6 +40,7 @@ const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: (
       if (error) setErrorMessage(error.message || 'Payment failed.');
       else {
         console.log('Payment succeeded:', paymentIntent);
+        showNotification('success', 'Payment Successful', 'Payment has been successfully processed.');
         onClose();
       }
     }
@@ -49,7 +52,7 @@ const CheckoutForm = ({ selectedPlan, onClose }: { selectedPlan: any; onClose: (
       <form onSubmit={handleSubmit}>
         <CardElement className="border p-2 rounded mb-4" />
         <Button type="primary" htmlType="submit" disabled={!stripe}>
-          Pay ${selectedPlan.price}
+          Pay Rs.{selectedPlan.price}
         </Button>
       </form>
       {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
@@ -100,7 +103,7 @@ const StripePayment = () => {
   const handlePlanSelection = (plan: any) => {
     Modal.confirm({
       title: `Confirm Purchase of ${plan.name}`,
-      content: `Are you sure you want to purchase the ${plan.name} plan for $${plan.price}?`,
+      content: `Are you sure you want to purchase the ${plan.name} plan for Rs.${plan.price}?`,
       onOk: () => {
         setShowPaymentPopup(true);
         setSelectedPlan(plan);
@@ -111,7 +114,7 @@ const StripePayment = () => {
   return (
     <div className="p-6 rounded-lg mx-5">
       <Row>
-        <h1 className="text-2xl font-bold">Choose a plan to start with</h1>
+        <h1 className="text-2xl font-bold mb-3">Choose a plan to start with : </h1>
       </Row>
       <Row gutter={[16, 16]}>
         {plans.map((plan: any) => (
@@ -126,7 +129,7 @@ const StripePayment = () => {
                 userPlanId === plan.id ? (
                   <Tag color="green">Already Purchased</Tag>
                 ) : (
-                  <Button type="primary" onClick={() => handlePlanSelection(plan)}>
+                  <Button type="primary" onClick={() => handlePlanSelection(plan)} className='bg-green-50'>
                     Select Plan
                   </Button>
                 )

@@ -3,6 +3,7 @@ import { Form, Input, Button, Select, message, Row, Col, Upload } from 'antd';
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
 import { apiService, showNotification } from '@/services/apiService';
 import { getIdFromToken } from '@/services/tokenDecodeService';
+import {useRouter} from 'next/navigation';
 import { uploadToCloudinary } from '@/services/uploadImagesService'; // Import the image upload service
 
 const { Option } = Select;
@@ -15,6 +16,7 @@ const ProfileEditComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
   const [shopImageUrl, setShopImageUrl] = useState<string>('');
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBusinessData = async () => {
@@ -28,15 +30,15 @@ const ProfileEditComponent: React.FC = () => {
             name: data.name,
             description: data.description,
             address: data.address,
-            business_contact: data.businessContact,
-            owner_name: data.ownerName,
-            owner_contact: data.ownerContact,
-            website_url: data.websiteUrl,
+            businessContact: data.businessContact,
+            ownerName: data.ownerName,
+            ownerContact: data.ownerContact,
+            websiteUrl: data.websiteUrl,
             services: data.services,
           });
           setServices(data.services || []);
-          setProfileImageUrl(data.profile_image || '');
-          setShopImageUrl(data.shop_image || '');
+          setProfileImageUrl(data.profileImage || '');
+          setShopImageUrl(data.shopImage || '');
         } else {
           throw new Error(response.message || 'Failed to fetch business details');
         }
@@ -87,17 +89,29 @@ const ProfileEditComponent: React.FC = () => {
       const businessId = getIdFromToken();
       if (businessId) {
         const payload = {
-          ...values,
-          services,
-          profile_image: profileImageUrl,
-          shop_image: shopImageUrl,
+          businessId, // Include the extracted business ID
+          ...values, // Spread the updated values from the form
+          services, // Add any extra services data
+          profileImage: profileImageUrl,
+          shopImage: shopImageUrl,
         };
+  
         console.log('Payload:', payload);
-        // const response = await apiService.put(`/business/${businessId}`, payload);
-        // response.success ? message.success('Profile updated successfully!') : message.error('Failed to update profile.');
+  
+        const response = await apiService.put('/business/update', payload);
+  
+        if (response.success) {
+          showNotification('success', 'Profile Update Status', "Profile updated successfully!");
+          router.push('/api/business/profile')
+        } else {
+          showNotification('error', 'Profile Update Status', "Failed to update profile.");
+        }
+      } else {
+        showNotification('error', 'Profile Update Status', "Failed to retrieve business ID.");
       }
-    } catch (error) {
-      message.error('Error updating profile.');
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      showNotification('error', 'Profile Update Status', "Failed to update profile.");
     }
   };
 
@@ -112,7 +126,7 @@ const ProfileEditComponent: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="owner_name" label="Owner Name" rules={[{ required: true, message: 'Please enter the business name!' }]}>
+            <Form.Item name="ownerName" label="Owner Name" rules={[{ required: true, message: 'Please enter the business name!' }]}>
               <Input placeholder="Owner Name" size="large" />
             </Form.Item>
           </Col>
@@ -120,12 +134,12 @@ const ProfileEditComponent: React.FC = () => {
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name="business_contact" label="Business Contact" rules={[{ required: true, message: 'Please enter the business contact!' }]}>
+            <Form.Item name="businessContact" label="Business Contact" rules={[{ required: true, message: 'Please enter the business contact!' }]}>
               <Input placeholder="Business Contact" size="large" />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="owner_contact" label="Owner Contact" rules={[{ required: true, message: 'Please enter the owner contact!' }]}>
+            <Form.Item name="ownerContact" label="Owner Contact" rules={[{ required: true, message: 'Please enter the owner contact!' }]}>
               <Input placeholder="Owner Contact" size="large" />
             </Form.Item>
           </Col>
@@ -138,7 +152,7 @@ const ProfileEditComponent: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="website_url" label="Website">
+            <Form.Item name="websiteUrl" label="Website">
               <Input placeholder="Website URL" size="large" />
             </Form.Item>
           </Col>

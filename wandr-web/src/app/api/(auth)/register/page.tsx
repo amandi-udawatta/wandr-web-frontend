@@ -17,7 +17,7 @@ import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import { notification } from 'antd';
 import { SHOP_CATEGORIES } from '@/constants/index';
-import { showNotification } from '@/services/apiService';
+import { showCentralAlert, showNotification } from '@/services/apiService';
 import GoogleMapsAutocomplete from '@/components/general/MapWithMarker';
 import { uploadToCloudinary } from '@/services/uploadImagesService';
 
@@ -44,14 +44,6 @@ interface RegisterFormInputs {
     password:string;
     confirmPassword:string;
   }
-  
-  const openNotification = (message: string) => {
-    notification.success({
-      message: 'Registration Status',
-      description: message,
-      placement: 'topRight',
-    });
-  };
 
 const RegisterPage: React.FC = () => {
 
@@ -81,7 +73,7 @@ const RegisterPage: React.FC = () => {
         const hashedPassword = CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex);
 
         const serviceStrings = data.businessServices.map(serviceObj => serviceObj.service);
-        const languageStings = data.businessLanguages.map(languageObj => languageObj);
+        const languageStrings = data.businessLanguages.map(languageObj => languageObj);
         console.log(serviceStrings);
 
         if (!file) {
@@ -96,41 +88,36 @@ const RegisterPage: React.FC = () => {
           return;
         }
 
-        const formData = new FormData();
-        formData.append('name', data.businessName);
-        formData.append('email', data.ownerEmail);
-        formData.append('businessContact', data.businessContact);
-        formData.append('description', data.businessDescription);
-        if (imageUrl) {
-            formData.append('shopImage', imageUrl);
-        }
-        formData.append('ownerName', data.ownerName);
-        formData.append('ownerContact', data.ownerContact);
-        formData.append('ownerNic', data.ownerNIC);
-        formData.append('address', data.businessAddress);
-        formData.append('latitude', data.latitude.toString());
-        formData.append('longitude', data.longitude.toString());
-        formData.append('languages', languageStings);
-        if(data.businessCategory === 'Shop'){
-            formData.append('businessType', '1');
-            formData.append('shopCategory', data.shopCategory)
-        }
-        else{
-            formData.append('businessType', '2');
-            formData.append('shopCategory', '0')
-        }
-        formData.append('services', serviceStrings);
-        formData.append('websiteUrl', data.websiteURL);
-        formData.append('password', hashedPassword); 
-
-        console.log("Form Data:",formData);
-        console.log("shop category:",data.shopCategory);
+        const payload = {
+            name: data.businessName,
+            email: data.ownerEmail,
+            password: hashedPassword,
+            description: data.businessDescription,
+            services: serviceStrings,
+            address: data.businessAddress,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            languages: languageStrings,
+            websiteUrl: data.websiteURL,
+            businessContact: data.businessContact,
+            businessType: data.businessCategory === 'Shop' ? 1 : 2,
+            ownerName: data.ownerName,
+            ownerContact: data.ownerContact,
+            ownerNic: data.ownerNIC,
+            shopImage: imageUrl,
+            shopCategory: data.businessCategory === 'Shop' ? parseInt(data.shopCategory) : 0,
+          };
+        
+        console.log('Payload:', payload);
 
         try {
             
             const response = await fetch('http://localhost:8081/api/proxy/signup-business', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
             });
       
             console.log('Registration response:', response);
@@ -141,15 +128,22 @@ const RegisterPage: React.FC = () => {
               throw new Error('Failed to Register');
             }
             // Assuming responseData structure is similar to { message: string, data: { accessToken: string, refreshToken: string } }
-            showNotification('success', 'Registration Status', responseData.message || 'Successfully Registered');
-            console.log('Registration successful:', responseData.message);
-            console.log('Access Token:', responseData.data.accessToken);
-            console.log('Refresh Token:', responseData.data.refreshToken);
+            showCentralAlert(
+                'Registration Successful',
+                responseData.message,
+                'success'
+            );
+            
+            console.log('Registration response:', response);
+            router.push('/')
+            // console.log('Registration successful:', responseData.message);
+            // console.log('Access Token:', responseData.data.accessToken);
+            // console.log('Refresh Token:', responseData.data.refreshToken);
       
-            Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
-            Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
+            // Cookies.set('accessToken', responseData.data.accessToken, { expires: 1 }); // expires in 1 day
+            // Cookies.set('refreshToken', responseData.data.refreshToken, { expires: 7 }); // expires in 7 days
 
-            router.push('/api/business/dashboard');
+            // router.push('/api/business/dashboard');
       
             // Handle storing tokens or redirecting to authenticated area
           } catch (error : any) {

@@ -23,14 +23,14 @@ export const uploadToCloudinary = async (file: File): Promise<string> => {
     const data = await response.json();
 
     if (data.secure_url) {
-        showNotification('success', 'Operation Status', 'Image uploaded successfully!');
+        message.success('Image uploaded successfully.');
         return data.secure_url;
     } else {
-        showNotification('error', 'Operation Status', 'Error uploading image. Please try again.');
+        message.error('Failed to upload image. Please try again.');
         return '';
     }
   } catch (error) {
-    showNotification('error', 'Operation Status', 'Error uploading image. Please try again.');
+    message.error('Failed to upload image. Please try again.');
     return '';
   }
 };
