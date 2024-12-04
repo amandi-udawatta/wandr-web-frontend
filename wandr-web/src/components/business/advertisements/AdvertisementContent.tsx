@@ -122,11 +122,25 @@ export const AdvertisementContent: React.FC = () => {
   const handleFilterChange = (value: string) => {
     setFilteredAds(value ? ads.filter((ad) => ad.status === value) : ads);
   };
+
+  const approvedAds = ads.filter(ad => ad.status === 'approved');
+  
   return (
     <div style={{ padding: '24px' }}>
       <Row gutter={16} className="justify-around">
         <Col span={8}>
-          <AdvertisementCarousel advertisements={ads.map(ad => ({ ...ad, remainingDays: ad.remainingDays, image: ad.image, postedDate: formatDate(Number(ad.adStartDate))}))} />
+          {approvedAds.length > 0 ? (
+            <AdvertisementCarousel 
+              advertisements={approvedAds.map(ad => ({
+                ...ad, 
+                remainingDays: ad.remainingDays, 
+                image: ad.image, 
+                postedDate: formatDate(Number(ad.adStartDate))
+              }))} 
+            />
+          ) : (
+            <div className='text-lg text-red-500'>No approved advertisements available.</div>
+          )}        
         </Col>
         <Col span={15}>
           <div className="border border-gray-200 rounded-xl p-5">
