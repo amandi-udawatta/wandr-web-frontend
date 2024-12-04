@@ -74,7 +74,7 @@ const LoginPage: React.FC = () => {
 
       // Handle storing tokens or redirecting to authenticated area
     } catch (error) {
-      showNotification('error', 'Login Status', 'Failed to login. Please check your credentials.');
+      showNotification('error', 'Login Status', 'Failed to login.');
       console.error('Login error:', error);
     }
   };

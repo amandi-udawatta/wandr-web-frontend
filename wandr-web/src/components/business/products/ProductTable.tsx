@@ -35,18 +35,21 @@ const ProductsTable: React.FC = () => {
         const businessId = getIdFromToken();
         const response = await apiService.get(`/products/business/${businessId}`);
         if (response.success) {
-          const transformedData = response.data.map((product: any, index: number) => ({
-            key: product.product_id.toString(),
-            id: (index + 1).toString(),
-            name: product.name,
-            price: product.price,
-            reservationPayment: product.reservation_payment,
-            description: product.description,
-            quantity: product.quantity,
-            imageUrl: product.image || '/default_product.png',
-          }));
-          setProducts(transformedData);
-          showNotification('success', 'Operation Status', 'Successfully Fetched Product Details');
+          if(response.data.length > 0){
+            const transformedData = response.data.map((product: any, index: number) => ({
+              key: product.product_id.toString(),
+              id: (index + 1).toString(),
+              name: product.name,
+              price: product.price,
+              reservationPayment: product.reservation_payment,
+              description: product.description,
+              quantity: product.quantity,
+              imageUrl: product.image || '/default_product.png',
+            }));
+            setProducts(transformedData);
+            showNotification('success', 'Operation Status', 'Successfully Fetched Product Details');
+          }
+          
         } else {
           throw new Error(response.message || 'Failed to fetch products');
         }
@@ -78,6 +81,7 @@ const ProductsTable: React.FC = () => {
         showNotification('success', 'Product Added', 'Product added successfully');
         setIsModalVisible(false);
         form.resetFields();
+        window.location.reload();
       } else {
         if(response.data === "LIMIT_EXCEEDED"){
           showCentralAlert(
