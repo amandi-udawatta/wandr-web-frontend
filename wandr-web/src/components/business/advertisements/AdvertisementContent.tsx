@@ -29,11 +29,13 @@ export const AdvertisementContent: React.FC = () => {
     const fetchAdvertisements = async () => {
       try {
         const businessId = getIdFromToken();
+        console.log(businessId);
         if (!businessId) {
           message.error('Failed to retrieve business ID. Please log in again.');
           return;
         }
         const response = await apiService.get(`/ads/business/${businessId}`);
+        console.log(response);
         if (response.success) {
           setAds(response.data);
           setFilteredAds(response.data);
@@ -99,6 +101,7 @@ export const AdvertisementContent: React.FC = () => {
       if (response.success) {
         showNotification('success', 'Operation Status', 'Advertisement added successfully!');
         handleCancel(); // Reset the form after success
+        window.location.reload();
       } else {
         if(response.data === "LIMIT_EXCEEDED"){
           showCentralAlert(
