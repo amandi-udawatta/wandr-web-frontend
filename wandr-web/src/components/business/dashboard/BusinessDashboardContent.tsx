@@ -8,16 +8,16 @@ import AdvertisementCarousel from '../advertisements/AdCarousel';
 import TableCard from '@/components/admin/TableCard';
 
 const initialStatistics = [
-  { title: 'Products Reserved', value: 125, color: 'bg-blue-100', icon: <ShoppingOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3c70d8' },
-  { title: 'Total Revenue', value: 'Rs. 19,500', color: 'bg-yellow-100', icon: <DollarOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FF947A' },
-  { title: 'Positive Feedbacks', value: 25, color: 'bg-green-100', icon: <SmileOutlined  style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3CD856' },
+  { title: 'Products Reserved', value: 5, color: 'bg-blue-100', icon: <ShoppingOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3c70d8' },
+  { title: 'Total Revenue', value: 'Rs. 3,500', color: 'bg-yellow-100', icon: <DollarOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FF947A' },
+  { title: 'Positive Feedbacks', value: 3, color: 'bg-green-100', icon: <SmileOutlined  style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#3CD856' },
   { title: 'Negative Feedbacks', value: 2, color: 'bg-red-100', icon: <FrownOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#FA5A7D' },
   { title: 'Remaining Days in Plan', value: 13, color: 'bg-purple-100', icon: <CalendarOutlined style={{ fontSize: '24px' }} className='white-icon' />, bgColor: '#BF83FF' },
 ];
 
 const pieChartData = {
   labels: ['USA', 'Canada', 'UK', 'Germany', 'Australia', 'India'],
-  values: [150, 120, 100, 80, 60, 50],
+  values: [2, 4, 3, 1, 1, 0],
   title: 'User Reservations by Country',
 };
 
@@ -169,7 +169,7 @@ const Dashboard = () => {
           </div>
         </Col>
       </Row>
-      <Row className='mt-5' justify='space-between' gutter={16}>
+      {/* <Row className='mt-5' justify='space-between' gutter={16}>
         <Col span={9}>
           <div className="">
             <PieChart data={pieChartData} />
@@ -180,7 +180,7 @@ const Dashboard = () => {
             <BarChart data={monthlyRevenueData}/>
           </div>
         </Col>
-      </Row>
+      </Row> */}
 
     </div>
   );
